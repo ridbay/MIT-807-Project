@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../hooks/useAppContext';
 import './DashboardLayout.css';
 
-type IconName = 'dashboard' | 'results' | 'cgpa' | 'certificates' | 'transcripts' | 'profile' | 'research';
+type IconName = 'dashboard' | 'results' | 'cgpa' | 'certificates' | 'transcripts' | 'profile' | 'research' | 'registry' | 'verification_logs' | 'curriculum';
 
 interface NavItem {
   icon: IconName;
@@ -21,12 +21,13 @@ const studentNav: NavItem[] = [
 ];
 
 const adminNav: NavItem[] = [
-  { icon: 'dashboard', label: 'Dashboard', to: '/dashboard/admin' },
-  { icon: 'results', label: 'Results', to: '/dashboard/admin/results' },
-  { icon: 'cgpa', label: 'CGPA Calculator', to: '/dashboard/admin/cgpa' },
-  { icon: 'certificates', label: 'Certificates', to: '/dashboard/admin/certificates' },
-  { icon: 'transcripts', label: 'Transcripts', to: '/dashboard/admin/transcripts' },
-  { icon: 'profile', label: 'Profile', to: '/dashboard/admin/profile' },
+  { icon: 'dashboard', label: 'Overview', to: '/dashboard/admin' },
+  { icon: 'registry', label: 'Student Registry', to: '/dashboard/admin/registry' },
+  { icon: 'results', label: 'Result Manager', to: '/dashboard/admin/results' },
+  { icon: 'transcripts', label: 'Transcript Apps', to: '/dashboard/admin/transcripts' },
+  { icon: 'certificates', label: 'Issuance', to: '/dashboard/admin/certificates' },
+  { icon: 'verification_logs', label: 'Verification Logs', to: '/dashboard/admin/verification' },
+  { icon: 'curriculum', label: 'Academic Rules', to: '/dashboard/admin/curriculum' },
 ];
 
 const NavIcon: React.FC<{ icon: IconName }> = ({ icon }) => {
@@ -79,11 +80,29 @@ const NavIcon: React.FC<{ icon: IconName }> = ({ icon }) => {
         <circle cx="12" cy="7" r="4" />
       </svg>
     );
-  if (icon === 'research')
+  if (icon === 'registry')
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    );
+  if (icon === 'verification_logs')
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="M9 12l2 2 4-4" />
+      </svg>
+    );
+  if (icon === 'curriculum')
     return (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        <path d="M9 5h7" />
+        <path d="M9 10h7" />
       </svg>
     );
   return null;

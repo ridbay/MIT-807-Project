@@ -4,17 +4,20 @@ A premium, high-fidelity web application designed for students and university ad
 
 ## 🚀 Key Features
 
-### 🎓 Student Portal
-- **Academic Results**: Session-wise grade tracking and cumulative performance summaries.
-- **CGPA Calculator**: Interactive tool for calculating current standings and future projections.
-- **Digital Credentials**: Blockchain-verified, globally verifiable academic certificates and diplomas.
-- **Official Transcripts**: Secure request system for official academic transcripts with tracking history.
-- **Personal Profile**: Comprehensive student profile management, including security settings and a document vault.
+### 🎓 Dynamic Student Portal
+- **Role-Aware Architecture**: Tailored experiences for **Undergraduate (UG)** and **Postgraduate (PG)** students.
+- **UG Academic Records**: Semester-based grade tracking, level-specific course management (100-500L), and standard 5.0 CGPA calculations.
+- **PG Academic Records**: Programme-based tracking (PGD, MSc, MIT, PhD), flexible coursework modules, and dedicated **Graduate Research Tracking**.
+- **CGPA Projector**: Role-specific grading scales (Standard UG vs Distinction/Merit PG) for accurate academic planning.
+- **Digital Credentials**: Blockchain-verified academic certificates and transcripts.
 
-### 🛡️ Administrator Dashboard
-- **Administrative Overview**: Real-time metrics for total students, pending requests, and issued credentials.
-- **Transcript Management**: Professional interface for the registrar office to review and authorize transcript applications.
-- **Record Accuracy**: Visual reporting on data integrity and automation efficiency.
+### 🛡️ Institutional Administrator Dashboard
+- **Administrative Control**: Manage academic records, review transcript requests, and monitor registry metrics.
+- **Data Integrity**: Automated verification of student records and credential issuance.
+
+### 🔍 Secure Verification System
+- **ID-Based Authentication**: A public-facing interface for employers and verifiers to authenticate documents using unique institutional IDs (e.g., `VER-102-390-AF`).
+- **Blockchain Simulation**: Cryptographic hashing to ensure record immutability and protection against forgery.
 
 ### 🏠 Landing Page
 - **Unified Entry**: A premium entry point with distinct authentication paths for students and institutional staff.

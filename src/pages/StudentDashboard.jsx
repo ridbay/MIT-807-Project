@@ -1,3 +1,4 @@
+import { useAppContext } from '../context/AppContext';
 import './StudentDashboard.css';
 
 const records = [
@@ -62,23 +63,47 @@ function RecordIcon({ icon }) {
 }
 
 function StudentDashboard() {
+  const { studentType, user } = useAppContext();
+
+  // Dynamic records based on student type
+  const displayRecords = studentType === 'pg' 
+    ? records 
+    : [
+        {
+          id: 1,
+          icon: 'doc',
+          title: 'Course Registration Approved: 300 Level Autumn',
+          description: 'Your semester course list has been verified and registered.',
+          status: 'APPROVED',
+          time: '5 HOURS AGO',
+          statusColor: 'green',
+        },
+        ...records.slice(1)
+      ];
+
+  const studentName = user?.name || "John Doe";
+  const studentMatric = user?.matric || (studentType === 'ug' ? "UG/2023/10234" : "PG/2023/00123");
+  const studentFaculty = "Faculty of Engineering";
+  const studentProgramme = studentType === 'ug' ? "Undergraduate - B.Eng Computer Engineering" : "Postgraduate - MSc Computer Science";
+  const currentSession = "2023/2024 Autumn Semester";
+
   return (
     <>
       {/* Welcome Row */}
       <div className="sd-welcome-row">
         <div>
-          <h1 className="sd-welcome-title">Welcome, John Doe</h1>
+          <h1 className="sd-welcome-title">Welcome, {studentName}</h1>
           <div className="sd-welcome-meta">
-            <span className="sd-matric-badge">MATRIC: 190405001</span>
+            <span className="sd-matric-badge">MATRIC: {studentMatric}</span>
             <span className="sd-meta-sep">•</span>
-            <span>Faculty of Engineering</span>
+            <span>{studentFaculty}</span>
             <span className="sd-meta-sep">•</span>
-            <span>Postgraduate - MSc Computer Science</span>
+            <span>{studentProgramme}</span>
           </div>
         </div>
         <div className="sd-session">
           <div className="sd-session-label">CURRENT ACADEMIC SESSION</div>
-          <div className="sd-session-value">2023/2024 Autumn Semester</div>
+          <div className="sd-session-value">{currentSession}</div>
         </div>
       </div>
 
@@ -93,12 +118,12 @@ function StudentDashboard() {
             </svg>
           </div>
           <div className="sd-stat-label">Current CGPA</div>
-          <div className="sd-stat-value">4.25</div>
-          <div className="sd-stat-sub">SCALE: 5.00 FIRST CLASS HONORS</div>
+          <div className="sd-stat-value">{studentType === 'ug' ? '3.82' : '4.25'}</div>
+          <div className="sd-stat-sub">SCALE: 5.00 {studentType === 'ug' ? 'SECOND CLASS UPPER' : 'FIRST CLASS HONORS'}</div>
           <div className="sd-stat-badge sd-stat-badge--teal">+0.12 pts</div>
         </div>
 
-        {/* Research Credits */}
+        {/* Academic Progress (Units/Credits) */}
         <div className="sd-stat-card">
           <div className="sd-stat-icon sd-stat-icon--gray">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -106,10 +131,13 @@ function StudentDashboard() {
               <polyline points="14 2 14 8 20 8" />
             </svg>
           </div>
-          <div className="sd-stat-label">Research Credits</div>
-          <div className="sd-stat-value">12 <span className="sd-stat-value-sub">/ 18</span></div>
+          <div className="sd-stat-label">{studentType === 'ug' ? 'Total Units' : 'Research Credits'}</div>
+          <div className="sd-stat-value">
+            {studentType === 'ug' ? '128' : '12'} 
+            <span className="sd-stat-value-sub"> / {studentType === 'ug' ? '160' : '18'}</span>
+          </div>
           <div className="sd-progress-bar-track">
-            <div className="sd-progress-bar-fill" style={{ width: `${(12 / 18) * 100}%` }} />
+            <div className="sd-progress-bar-fill" style={{ width: `${(studentType === 'ug' ? 128 / 160 : 12 / 18) * 100}%` }} />
           </div>
         </div>
 
@@ -159,7 +187,7 @@ function StudentDashboard() {
             <button className="sd-link-btn" id="view-transcript-btn">View Transcript History</button>
           </div>
           <div className="sd-records-list">
-            {records.map((r) => (
+            {displayRecords.map((r) => (
               <div className="sd-record-item" key={r.id}>
                 <RecordIcon icon={r.icon} />
                 <div className="sd-record-body">

@@ -5,6 +5,7 @@ const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState('dark');
   const [user, setUser] = useState(null);
+  const [studentType, setStudentType] = useState('ug'); // 'ug' or 'pg'
   const [loading, setLoading] = useState(false);
 
   // Example effect
@@ -24,6 +25,8 @@ export const AppProvider = ({ children }) => {
     setUser,
     loading,
     setLoading,
+    studentType,
+    setStudentType,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

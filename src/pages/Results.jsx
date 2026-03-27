@@ -1,3 +1,4 @@
+import { useAppContext } from '../context/AppContext';
 import './Results.css';
 
 const courses = [
@@ -9,6 +10,22 @@ const courses = [
 ];
 
 function Results() {
+  const { studentType } = useAppContext();
+
+  const currentCourses = studentType === 'pg' 
+    ? [
+        { code: 'CSC 801', title: 'Advanced Machine Learning & Neural Networks', unit: '4.0', grade: 'A', points: '20.0' },
+        { code: 'MIT 805', title: 'Enterprise Architecture & Cloud Strategy', unit: '3.0', grade: 'A', points: '15.0' },
+        { code: 'CSC 812', title: 'Big Data Analytics & Data Mining', unit: '3.0', grade: 'B', points: '12.0' },
+        { code: 'RES 901', title: 'Research Methodology & Technical Writing', unit: '4.0', grade: 'A', points: '20.0' },
+      ]
+    : [
+        { code: 'CSC 401', title: 'Advanced Distributed Computing Systems', unit: '4.0', grade: 'A', points: '20.0' },
+        { code: 'MAT 415', title: 'Numerical Analysis and Optimization', unit: '3.0', grade: 'A', points: '15.0' },
+        { code: 'CSC 405', title: 'Human Computer Interaction Design', unit: '3.0', grade: 'B', points: '12.0' },
+        { code: 'SEN 402', title: 'Software Architecture & Cloud Patterns', unit: '4.0', grade: 'A', points: '20.0' },
+        { code: 'GNS 401', title: 'Entrepreneurship & Ethical Leadership', unit: '2.0', grade: 'A', points: '10.0' },
+      ];
   return (
     <div className="res-page">
       {/* Header Section */}
@@ -17,7 +34,10 @@ function Results() {
           <div className="res-subtitle">ACADEMIC PORTFOLIO</div>
           <h1 className="res-title">Result Transcripts</h1>
           <p className="res-desc">
-            View your historical performance, analyze semester trends, and export verified records for external processing.
+            {studentType === 'pg' 
+              ? 'Track your programme-based progress, coursework modules, and research milestones in real-time.'
+              : 'View your historical performance, analyze semester trends, and export verified records for external processing.'
+            }
           </p>
         </div>
         <div className="res-top-stats">
@@ -29,7 +49,7 @@ function Results() {
             </div>
             <div className="res-stat-content">
               <div className="res-stat-label">CUMULATIVE GPA</div>
-              <div className="res-stat-value">3.88</div>
+              <div className="res-stat-value">{studentType === 'pg' ? '4.88' : '3.82'}</div>
             </div>
           </div>
           <div className="res-stat-card">
@@ -49,16 +69,16 @@ function Results() {
       {/* Filters Row */}
       <div className="res-filters-card">
         <div className="res-filter-group">
-          <label className="res-filter-label">ACADEMIC SESSION</label>
+          <label className="res-filter-label">{studentType === 'pg' ? 'PROGRAMME TYPE' : 'ACADEMIC SESSION'}</label>
           <select className="res-filter-select">
-            <option>2023 / 2024 Academic Year</option>
+            <option>{studentType === 'pg' ? 'MSc Computer Science' : '2023 / 2024 Academic Year'}</option>
           </select>
         </div>
         <div className="res-filter-divider" />
         <div className="res-filter-group">
-          <label className="res-filter-label">CURRENT SEMESTER</label>
+          <label className="res-filter-label">{studentType === 'pg' ? 'COURSEWORK MODULE' : 'CURRENT SEMESTER'}</label>
           <select className="res-filter-select">
-            <option>First Semester</option>
+            <option>{studentType === 'pg' ? 'Core Coursework - Tier 1' : 'First Semester'}</option>
           </select>
         </div>
         <div className="res-filter-actions">
@@ -100,7 +120,7 @@ function Results() {
             </tr>
           </thead>
           <tbody>
-            {courses.map((c, i) => (
+            {currentCourses.map((c, i) => (
               <tr key={i}>
                 <td className="res-td-code">{c.code}</td>
                 <td className="res-td-title">{c.title}</td>

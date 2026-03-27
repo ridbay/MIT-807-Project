@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAppContext } from '../context/AppContext';
 import './CGPACalculator.css';
 
 function CGPACalculator() {
-  const [programmeType, setProgrammeType] = useState('Undergraduate');
+  const { studentType } = useAppContext();
+  const [programmeType, setProgrammeType] = useState(studentType === 'pg' ? 'Postgraduate' : 'Undergraduate');
   const [courses, setCourses] = useState([
     { name: '', unit: '', grade: '' },
     { name: '', unit: '', grade: '' },
     { name: '', unit: '', grade: '' },
   ]);
+
+  useEffect(() => {
+    setProgrammeType(studentType === 'pg' ? 'Postgraduate' : 'Undergraduate');
+  }, [studentType]);
 
   const addRow = () => setCourses([...courses, { name: '', unit: '', grade: '' }]);
   const clearAll = () => setCourses([{ name: '', unit: '', grade: '' }]);
@@ -97,9 +103,22 @@ function CGPACalculator() {
                 </select>
                 <select className="cgpa-select">
                   <option value="">Select Grade</option>
-                  <option value="5">A (5.0)</option>
-                  <option value="4">B (4.0)</option>
-                  <option value="3">C (3.0)</option>
+                  {programmeType === 'Undergraduate' ? (
+                    <>
+                      <option value="5">A (5.0)</option>
+                      <option value="4">B (4.0)</option>
+                      <option value="3">C (3.0)</option>
+                      <option value="2">D (2.0)</option>
+                      <option value="0">F (0.0)</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="5">Distinction (A)</option>
+                      <option value="4">Merit (B)</option>
+                      <option value="3">Pass (C)</option>
+                      <option value="0">Fail (F)</option>
+                    </>
+                  )}
                 </select>
               </div>
             ))}
@@ -138,7 +157,9 @@ function CGPACalculator() {
           <div className="cgpa-standing-value">
             4.82<span className="cgpa-standing-max">/ 5.0</span>
           </div>
-          <div className="cgpa-standing-badge">FIRST CLASS / DISTINCTION</div>
+          <div className="cgpa-standing-badge">
+            {programmeType === 'Undergraduate' ? 'FIRST CLASS HONORS' : 'PASS WITH DISTINCTION'}
+          </div>
           <div className="cgpa-star-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />

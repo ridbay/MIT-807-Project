@@ -8,6 +8,8 @@ import CGPACalculator from "./pages/CGPACalculator";
 import Certificates from "./pages/Certificates";
 import Transcripts from "./pages/Transcripts";
 import Profile from "./pages/Profile";
+import Research from "./pages/Research";
+import Verification from "./pages/Verification";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import "./App.css";
@@ -27,6 +29,8 @@ function App() {
         <Route path="certificates" element={<Certificates />} />
         <Route path="transcripts" element={<Transcripts />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="research" element={<Research />} />
+        <Route path="verify" element={<Verification />} />
       </Route>
 
       {/* Admin Routes */}

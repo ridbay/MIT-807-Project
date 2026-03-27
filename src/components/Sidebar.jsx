@@ -1,4 +1,5 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 import './DashboardLayout.css';
 
 const studentNav = [
@@ -69,14 +70,30 @@ function NavIcon({ icon }) {
         <circle cx="12" cy="7" r="4" />
       </svg>
     );
+  if (icon === 'research')
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+    );
   return null;
 }
 
 function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { studentType } = useAppContext();
   const isAdmin = location.pathname.startsWith('/dashboard/admin');
-  const navItems = isAdmin ? adminNav : studentNav;
+  
+  let navItems = isAdmin ? [...adminNav] : [...studentNav];
+
+  // Add Research for PG students
+  if (!isAdmin && studentType === 'pg') {
+    // Insert after results
+    const resultsIdx = navItems.findIndex(item => item.icon === 'results');
+    navItems.splice(resultsIdx + 1, 0, { icon: 'research', label: 'Research', to: '/dashboard/student/research' });
+  }
 
   return (
     <aside className="sd-sidebar">
@@ -109,7 +126,11 @@ function Sidebar() {
       </nav>
 
       <div className="sd-sidebar-bottom">
-        <button className="sd-verify-btn" id="verify-record-btn">
+        <button 
+          className="sd-verify-btn" 
+          id="verify-record-btn"
+          onClick={() => navigate(isAdmin ? '/dashboard/admin/verify' : '/dashboard/student/verify')}
+        >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
           </svg>

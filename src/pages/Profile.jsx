@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
 import './Profile.css';
 
 const documents = [
@@ -8,7 +9,14 @@ const documents = [
 ];
 
 function Profile() {
+  const { studentType, user } = useAppContext();
   const [tfaEnabled, setTfaEnabled] = useState(true);
+
+  const studentName = user?.name || (studentType === 'ug' ? "Alexander J. Sterling" : "Dr. Sarah Rodriguez");
+  const studentMatric = user?.matric || (studentType === 'ug' ? "MAT/ENG/20/4492" : "MAT/PG/23/0012");
+  const studentLevel = studentType === 'ug' ? "400L" : "Masters (MIT)";
+  const studentProgramme = studentType === 'ug' ? "B.Eng Computer Engineering" : "MSc Computer Science";
+  const studentTypeLabel = studentType === 'ug' ? "UNDERGRADUATE" : "POSTGRADUATE";
 
   return (
     <div className="prof-page">
@@ -30,7 +38,7 @@ function Profile() {
           </div>
           <div className="prof-header-info">
              <div className="prof-name-row">
-               <h1 className="prof-name">Alexander J. Sterling</h1>
+               <h1 className="prof-name">{studentName}</h1>
                <span className="prof-verified-pill">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
@@ -44,7 +52,7 @@ function Profile() {
                       <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
                       <path d="M12 6a6 6 0 1 0 6 6A6 6 0 0 0 12 6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z" />
                    </svg>
-                   MAT/ENG/20/4492
+                   {studentMatric}
                 </div>
                 <div className="prof-meta-item">
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -74,7 +82,7 @@ function Profile() {
             <div className="prof-form-grid">
               <div className="prof-info-box">
                 <label>FULL NAME</label>
-                <div className="prof-info-val">Alexander Julian Sterling</div>
+                <div className="prof-info-val">{studentName}</div>
               </div>
               <div className="prof-info-box">
                 <label>EMAIL ADDRESS</label>
@@ -143,7 +151,7 @@ function Profile() {
                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
               </svg>
               <h2 className="prof-card-title">Academic Profile</h2>
-              <span className="prof-type-badge">POSTGRADUATE</span>
+              <span className="prof-type-badge">{studentTypeLabel}</span>
             </div>
             
             <div className="prof-acad-grid">
@@ -153,11 +161,11 @@ function Profile() {
               </div>
               <div className="prof-acad-item right">
                 <label>LEVEL</label>
-                <div className="prof-acad-val">700L</div>
+                <div className="prof-acad-val">{studentLevel}</div>
               </div>
               <div className="prof-acad-item full">
                 <label>DEPARTMENT</label>
-                <div className="prof-acad-val">Computer Engineering</div>
+                <div className="prof-acad-val">{studentProgramme}</div>
               </div>
             </div>
 
@@ -167,7 +175,7 @@ function Profile() {
                 <div className="prof-standing-status">First Class</div>
               </div>
               <div className="prof-standing-ring">
-                 4.82
+                 {studentType === 'pg' ? '4.88' : '3.82'}
               </div>
             </div>
           </section>

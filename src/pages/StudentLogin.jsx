@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 import "./StudentLogin.css";
 
 function Login() {
@@ -9,13 +10,24 @@ function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const { setStudentType, setUser } = useAppContext();
+
+  const handleTabChange = (type) => {
+    setTab(type);
+    setStudentType(type === "undergraduate" ? "ug" : "pg");
+  };
 
   const matricPlaceholder =
     tab === "undergraduate" ? "UG/2023/10234" : "PG/2023/00123";
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: integrate auth service
+    // Mock user data
+    setUser({
+      name: tab === "undergraduate" ? "Alex M. Thompson" : "Dr. Sarah Rodriguez",
+      matric: matric || (tab === "undergraduate" ? "UG/2023/10234" : "PG/2023/00123"),
+      type: tab === "undergraduate" ? "ug" : "pg"
+    });
     navigate("/dashboard/student");
   };
 
@@ -100,7 +112,7 @@ function Login() {
               role="tab"
               aria-selected={tab === "undergraduate"}
               className={`login-tab ${tab === "undergraduate" ? "login-tab--active" : ""}`}
-              onClick={() => setTab("undergraduate")}
+              onClick={() => handleTabChange("undergraduate")}
             >
               UNDERGRADUATE
             </button>
@@ -109,7 +121,7 @@ function Login() {
               role="tab"
               aria-selected={tab === "postgraduate"}
               className={`login-tab ${tab === "postgraduate" ? "login-tab--active" : ""}`}
-              onClick={() => setTab("postgraduate")}
+              onClick={() => handleTabChange("postgraduate")}
             >
               POSTGRADUATE
             </button>

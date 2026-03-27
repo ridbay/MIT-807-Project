@@ -1,0 +1,248 @@
+.ver-page {
+  min-height: calc(100vh - 80px); /* Adjust based on topbar height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #f8fafc;
+}
+
+.ver-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+.ver-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.ver-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.ver-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a2e54;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.ver-desc {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Search Card */
+.ver-search-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 28px;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.03);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.ver-form {
+  margin-bottom: 1.5rem;
+}
+
+.ver-input-group {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+}
+
+.ver-input-icon {
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.ver-input {
+  flex: 1;
+  height: 64px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 0 1.5rem 0 4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a2e54;
+  transition: all 0.2s;
+}
+
+.ver-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.ver-submit-btn {
+  height: 64px;
+  background: #1a2e54;
+  color: white;
+  border: none;
+  padding: 0 2rem;
+  border-radius: 18px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ver-submit-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+}
+
+.ver-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.ver-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* Result Card */
+.ver-result-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 28px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ver-result-card--authenticated { border-left: 6px solid #10b981; }
+.ver-result-card--invalid { border-left: 6px solid #ef4444; }
+
+.ver-result-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ver-result-card--authenticated .ver-result-icon { background: #d1fae5; color: #10b981; }
+.ver-result-card--invalid .ver-result-icon { background: #fee2e2; color: #ef4444; }
+
+.ver-result-body { flex: 1; }
+
+.ver-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.ver-result-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #1a2e54;
+}
+
+.ver-hash {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  background: #f1f5f9;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  color: #64748b;
+}
+
+.ver-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ver-detail-item label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.ver-detail-val {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a2e54;
+}
+
+.ver-download-btn {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1a2e54;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ver-download-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.ver-error-text {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Security Badges */
+.ver-security-badges {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.ver-sec-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}

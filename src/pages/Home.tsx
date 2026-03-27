@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
-import heroBg from '/Users/ridbay/.gemini/antigravity/brain/bb14a163-a637-4ca4-80a8-04fb467c8440/portal_landing_hero_bg_1774608778579.png';
+import heroBg from '../assets/hero-bg.png';
 
 const Home: React.FC = () => {
   return (

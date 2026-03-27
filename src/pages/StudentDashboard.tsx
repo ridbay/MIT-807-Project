@@ -1,103 +1,163 @@
-import React from 'react';
-import { useAppContext } from '../hooks/useAppContext';
-import './StudentDashboard.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../hooks/useAppContext";
+import {
+  calculateGPA,
+  getUGClassification,
+  getPGStatus,
+  getUnitProgress,
+} from "../lib/gpa-engine";
+import { PROGRAMME_RULES } from "../data/rules";
+import "./StudentDashboard.css";
 
 interface Record {
   id: number;
-  icon: 'doc' | 'doc-teal' | 'card';
+  icon: "doc" | "doc-teal" | "card";
   title: string;
   description: string;
   status: string | null;
   time: string;
   statusColor?: string;
-  badge?: 'download' | 'check';
+  badge?: "download" | "check";
 }
 
 const records: Record[] = [
   {
     id: 1,
-    icon: 'doc',
-    title: 'Thesis Proposal Approved: AI in Healthcare',
-    description: 'Your research methodology has been vetted and approved by the PG Committee.',
-    status: 'APPROVED',
-    time: '3 HOURS AGO',
-    statusColor: 'green',
+    icon: "doc",
+    title: "Thesis Proposal Approved: AI in Healthcare",
+    description:
+      "Your research methodology has been vetted and approved by the PG Committee.",
+    status: "APPROVED",
+    time: "3 HOURS AGO",
+    statusColor: "green",
   },
   {
     id: 2,
-    icon: 'doc-teal',
-    title: 'Grade Published: Advanced Machine Learning (CSC 801)',
-    description: 'The Professional Elective certification is available for download.',
+    icon: "doc-teal",
+    title: "Grade Published: Advanced Machine Learning (CSC 801)",
+    description:
+      "The Professional Elective certification is available for download.",
     status: null,
-    time: 'YESTERDAY',
-    badge: 'download',
+    time: "YESTERDAY",
+    badge: "download",
   },
   {
     id: 3,
-    icon: 'card',
-    title: 'Transcript Processing Fee Received',
-    description: 'Payment confirmed for Official Transcript request (Destination: MIT).',
+    icon: "card",
+    title: "Transcript Processing Fee Received",
+    description:
+      "Payment confirmed for Official Transcript request (Destination: MIT).",
     status: null,
-    time: 'OCT 24',
-    badge: 'check',
+    time: "OCT 24",
+    badge: "check",
   },
 ];
 
-const RecordIcon: React.FC<{ icon: 'doc' | 'doc-teal' | 'card' }> = ({ icon }) => {
-  if (icon === 'doc')
+const RecordIcon: React.FC<{ icon: "doc" | "doc-teal" | "card" }> = ({
+  icon,
+}) => {
+  if (icon === "doc")
     return (
       <div className="sd-record-icon sd-record-icon--blue">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
           <polyline points="14 2 14 8 20 8" />
         </svg>
       </div>
     );
-  if (icon === 'doc-teal')
+  if (icon === "doc-teal")
     return (
       <div className="sd-record-icon sd-record-icon--teal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
           <polyline points="14 2 14 8 20 8" />
         </svg>
       </div>
     );
-  if (icon === 'card')
+  if (icon === "card")
     return (
       <div className="sd-record-icon sd-record-icon--gray">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <rect x="2" y="5" width="20" height="14" rx="2" />
           <line x1="2" y1="10" x2="22" y2="10" />
         </svg>
       </div>
     );
   return null;
-}
+};
 
 const StudentDashboard: React.FC = () => {
-  const { studentType, user } = useAppContext();
+  const { studentType, user, courseRecords } = useAppContext();
+  const navigate = useNavigate();
 
   // Dynamic records based on student type
-  const displayRecords: Record[] = studentType === 'pg' 
-    ? records 
-    : [
-        {
-          id: 1,
-          icon: 'doc',
-          title: 'Course Registration Approved: 300 Level Autumn',
-          description: 'Your semester course list has been verified and registered.',
-          status: 'APPROVED',
-          time: '5 HOURS AGO',
-          statusColor: 'green',
-        },
-        ...records.slice(1)
-      ];
+  const displayRecords: Record[] =
+    studentType === "pg"
+      ? records
+      : [
+          {
+            id: 1,
+            icon: "doc",
+            title: "Course Registration Approved: 300 Level Autumn",
+            description:
+              "Your semester course list has been verified and registered.",
+            status: "APPROVED",
+            time: "5 HOURS AGO",
+            statusColor: "green",
+          },
+          ...records.slice(1),
+        ];
 
-  const studentName = user?.name || "John Doe";
-  const studentMatric = user?.matric || (studentType === 'ug' ? "UG/2023/10234" : "PG/2023/00123");
-  const studentFaculty = "Faculty of Engineering";
-  const studentProgramme = studentType === 'ug' ? "Undergraduate - B.Eng Computer Engineering" : "Postgraduate - MSc Computer Science";
-  const currentSession = "2023/2024 Autumn Semester";
+  // Filter records by active programme to get accurate metrics
+  const activeProgramme =
+    user?.programme || (studentType === "pg" ? "MIT" : "UG-CS");
+  const rules = PROGRAMME_RULES[activeProgramme];
+  const programmeRecords = courseRecords.filter(
+    (r) => r.programmeId === activeProgramme,
+  );
+
+  const currentGPA = calculateGPA(programmeRecords);
+  const standing =
+    studentType === "ug"
+      ? getUGClassification(currentGPA)
+      : getPGStatus(currentGPA, rules);
+
+  const progress = getUnitProgress(programmeRecords, rules);
+
+  const studentName = user?.name || "Student";
+  const studentMatric = user?.matric || "N/A";
+  const studentFaculty = user?.department || "Faculty of Science";
+  const studentProgramme =
+    user?.programmeName ||
+    (studentType === "ug"
+      ? "B.Sc. Computer Science"
+      : "Master of Information Technology");
+  const currentSession = "2025/2026 Academic Session";
+
+  const totalCourses = programmeRecords.length;
+  const totalGradePoints = programmeRecords.reduce((acc, r) => acc + (r.units * (r.point || 0)), 0);
 
   return (
     <>
@@ -130,12 +190,24 @@ const StudentDashboard: React.FC = () => {
             </svg>
           </div>
           <div className="sd-stat-label">Current CGPA</div>
-          <div className="sd-stat-value">{studentType === 'ug' ? '3.82' : '4.25'}</div>
-          <div className="sd-stat-sub">SCALE: 5.00 {studentType === 'ug' ? 'SECOND CLASS UPPER' : 'FIRST CLASS HONORS'}</div>
-          <div className="sd-stat-badge sd-stat-badge--teal">+0.12 pts</div>
+          <div className="sd-stat-value">{currentGPA.toFixed(2)}</div>
+          <div className="sd-stat-sub">SCALE: 5.00 • {standing.toUpperCase()}</div>
         </div>
 
-        {/* Academic Progress (Units/Credits) */}
+        {/* Total Courses */}
+        <div className="sd-stat-card">
+          <div className="sd-stat-icon sd-stat-icon--teal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+          </div>
+          <div className="sd-stat-label">Total Courses</div>
+          <div className="sd-stat-value">{totalCourses.toString().padStart(2, '0')}</div>
+          <div className="sd-stat-sub">COURSES IN {activeProgramme}</div>
+        </div>
+
+        {/* Total Units */}
         <div className="sd-stat-card">
           <div className="sd-stat-icon sd-stat-icon--gray">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -143,50 +215,28 @@ const StudentDashboard: React.FC = () => {
               <polyline points="14 2 14 8 20 8" />
             </svg>
           </div>
-          <div className="sd-stat-label">{studentType === 'ug' ? 'Total Units' : 'Research Credits'}</div>
+          <div className="sd-stat-label">Total Units</div>
           <div className="sd-stat-value">
-            {studentType === 'ug' ? '128' : '12'} 
-            <span className="sd-stat-value-sub"> / {studentType === 'ug' ? '160' : '18'}</span>
+            {progress.earned} 
+            <span className="sd-stat-value-sub"> / {progress.required}</span>
           </div>
           <div className="sd-progress-bar-track">
-            <div className="sd-progress-bar-fill" style={{ width: `${(studentType === 'ug' ? 128 / 160 : 12 / 18) * 100}%` }} />
+            <div className="sd-progress-bar-fill" style={{ width: `${progress.percentage}%` }} />
           </div>
         </div>
 
-        {/* Certificates Issued */}
+        {/* Total Grade Points */}
         <div className="sd-stat-card">
-          <div className="sd-stat-icon sd-stat-icon--teal">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+          <div className="sd-stat-icon sd-stat-icon--orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v8" />
+              <path d="M8 12h8" />
             </svg>
           </div>
-          <div className="sd-stat-label">Certificates Issued</div>
-          <div className="sd-stat-value">06</div>
-          <div className="sd-stat-sub">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <polyline points="8 17 12 21 16 17" />
-              <line x1="12" y1="12" x2="12" y2="21" />
-            </svg>
-            Last issued 12 days ago
-          </div>
-        </div>
-
-        {/* Pending Requests */}
-        <div className="sd-stat-card">
-          <div className="sd-stat-icon sd-stat-icon--red">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <line x1="3" y1="9" x2="21" y2="9" />
-              <line x1="9" y1="21" x2="9" y2="9" />
-            </svg>
-          </div>
-          <div className="sd-stat-dot" aria-label="Alert" />
-          <div className="sd-stat-label">Pending Requests</div>
-          <div className="sd-stat-value">02</div>
-          <div className="sd-stat-sub sd-stat-sub--red">
-            <span className="sd-dot-inline" aria-hidden="true" />
-            Awaiting Dean's Approval
-          </div>
+          <div className="sd-stat-label">Total Grade Points</div>
+          <div className="sd-stat-value">{totalGradePoints.toFixed(1)}</div>
+          <div className="sd-stat-sub">CUMULATIVE LOAD</div>
         </div>
       </div>
 
@@ -196,7 +246,9 @@ const StudentDashboard: React.FC = () => {
         <section className="sd-records" aria-label="Recent Academic Records">
           <div className="sd-section-header">
             <h2 className="sd-section-title">Recent Academic Records</h2>
-            <button className="sd-link-btn" id="view-transcript-btn">View Transcript History</button>
+            <button className="sd-link-btn" id="view-transcript-btn" onClick={() => navigate("/dashboard/student/transcripts")}>
+              View Transcript History
+            </button>
           </div>
           <div className="sd-records-list">
             {displayRecords.map((r) => (
@@ -204,26 +256,42 @@ const StudentDashboard: React.FC = () => {
                 <RecordIcon icon={r.icon} />
                 <div className="sd-record-body">
                   <div className="sd-record-title">{r.title}</div>
-                  <div className="sd-record-body">{r.description}</div>
+                  <div className="sd-record-description">{r.description}</div>
                 </div>
                 <div className="sd-record-right">
                   {r.status && (
-                    <span className={`sd-record-status sd-record-status--${r.statusColor}`}>
+                    <span
+                      className={`sd-record-status sd-record-status--${r.statusColor}`}
+                    >
                       {r.status}
                     </span>
                   )}
-                  {r.badge === 'download' && (
+                  {r.badge === "download" && (
                     <div className="sd-record-badge-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <polyline points="8 17 12 21 16 17" />
                         <line x1="12" y1="12" x2="12" y2="21" />
                         <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29" />
                       </svg>
                     </div>
                   )}
-                  {r.badge === 'check' && (
+                  {r.badge === "check" && (
                     <div className="sd-record-badge-icon sd-record-badge-icon--green">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     </div>
@@ -240,24 +308,68 @@ const StudentDashboard: React.FC = () => {
           <h2 className="sd-section-title">Fast Track</h2>
           <div className="sd-fast-track-card">
             <h3>Need an Official Document?</h3>
-            <p>Request certified transcripts and degree statements directly to global institutions.</p>
-            <button className="sd-new-request-btn" id="new-request-btn">
+            <p>
+              Request certified transcripts and degree statements directly to
+              global institutions.
+            </p>
+            <button className="sd-new-request-btn" id="new-request-btn" onClick={() => navigate("/dashboard/student/transcripts")}>
               New Request →
             </button>
           </div>
           <div className="sd-quick-links">
             {[
               {
-                id: 'download-id-btn', label: 'Download ID Card',
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="8 17 12 21 16 17" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29" /></svg>
+                id: "download-id-btn",
+                label: "Download ID Card",
+                icon: (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <polyline points="8 17 12 21 16 17" />
+                    <line x1="12" y1="12" x2="12" y2="21" />
+                    <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29" />
+                  </svg>
+                ),
               },
               {
-                id: 'contact-registrar-btn', label: 'Contact Registrar',
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                id: "contact-registrar-btn",
+                label: "Contact Registrar",
+                icon: (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                ),
               },
               {
-                id: 'support-portal-btn', label: 'Support Portal',
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+                id: "support-portal-btn",
+                label: "Support Portal",
+                icon: (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                ),
               },
             ].map(({ id, label, icon }) => (
               <button key={id} id={id} className="sd-quick-link">
@@ -271,6 +383,6 @@ const StudentDashboard: React.FC = () => {
       </div>
     </>
   );
-}
+};
 
 export default StudentDashboard;

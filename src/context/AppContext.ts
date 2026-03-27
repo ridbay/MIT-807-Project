@@ -32,6 +32,8 @@ export interface AppContextType {
   setStudentType: Dispatch<SetStateAction<StudentType>>;
   courseRecords: CourseAttempt[];
   setCourseRecords: Dispatch<SetStateAction<CourseAttempt[]>>;
+  verifiedCertificates: string[];
+  setVerifiedCertificates: Dispatch<SetStateAction<string[]>>;
 }
 
 

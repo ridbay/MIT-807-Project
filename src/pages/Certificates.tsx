@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useRef } from "react";
+import html2canvas from "html2canvas";
 import { useAppContext } from "../hooks/useAppContext";
 import {
   calculateGPA,
@@ -6,29 +7,57 @@ import {
   getPGStatus,
 } from "../lib/gpa-engine";
 import { PROGRAMME_RULES } from "../data/rules";
+import { exportCertificatePDF } from "../lib/pdf-export";
 import "./Certificates.css";
 
 const Certificates: React.FC = () => {
-  const { user, studentType, courseRecords } = useAppContext();
+  const { user, studentType, courseRecords, setVerifiedCertificates } =
+    useAppContext();
+  const [exportType, setExportType] = useState<'pdf' | 'img'>('pdf');
+  const certificateRef = useRef<HTMLDivElement>(null);
 
-  const programmeId = user?.programme || "UG-CS";
-  const currentGPA = useMemo(() => {
-    const pRecords = courseRecords.filter(r => r.programmeId === programmeId);
-    return calculateGPA(pRecords);
-  }, [courseRecords, programmeId]);
+  const programmeId =
+    user?.programme || (studentType === "pg" ? "MIT" : "UG-CS");
 
-  const classification = useMemo(() => {
-    const rules = PROGRAMME_RULES[programmeId];
-    return programmeId === "UG-CS"
-      ? getUGClassification(currentGPA)
-      : getPGStatus(currentGPA, rules);
-  }, [currentGPA, programmeId]);
+  const pRecords = useMemo(() => courseRecords.filter(r => r.programmeId === programmeId), [courseRecords, programmeId]);
+  const currentGPA = useMemo(() => calculateGPA(pRecords), [pRecords]);
+  const officialGPA = user?.cgpa || 0;
+  const effectiveGPA = pRecords.length > 0 ? currentGPA : officialGPA;
+  
+  const rules = PROGRAMME_RULES[programmeId];
+  
+  const classification = studentType === "pg"
+    ? getPGStatus(effectiveGPA, rules)
+    : getUGClassification(effectiveGPA);
 
   const programmeName =
     user?.programmeName ||
     (studentType === "pg"
       ? "Master of Information Technology (MIT)"
       : "B.Sc. Computer Science");
+
+  const handleExport = async () => {
+    const verificationId = Math.floor(
+      Math.random() * 900000000000 + 100000000000,
+    ).toString();
+    setVerifiedCertificates((prev) => [...prev, verificationId]);
+
+    if (exportType === 'pdf') {
+       exportCertificatePDF(user, classification, currentGPA, verificationId, pRecords);
+    } else {
+       if (certificateRef.current) {
+          const canvas = await html2canvas(certificateRef.current, {
+            useCORS: true,
+            backgroundColor: '#ffffff'
+          } as any);
+          const link = document.createElement('a');
+          link.download = `Certificate_${user?.matric || 'scholarNode'}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+       }
+    }
+  };
+
   return (
     <div className="cert-page">
       {/* Breadcrumbs & Header */}
@@ -59,7 +88,20 @@ const Certificates: React.FC = () => {
               </svg>
               View Log
             </button>
-            <button className="cert-btn-primary">
+            <button
+              className="cert-btn-primary"
+              onClick={handleExport}
+              disabled={
+                courseRecords.filter((r) => r.programmeId === programmeId)
+                  .length === 0
+              }
+              title={
+                courseRecords.filter((r) => r.programmeId === programmeId)
+                  .length === 0
+                  ? "No courses completed yet"
+                  : ""
+              }
+            >
               <svg
                 width="16"
                 height="16"
@@ -91,30 +133,39 @@ const Certificates: React.FC = () => {
                 {user?.name || "Guest Student"}
               </div>
             </div>
-
+            {/* 
             <div className="cert-detail-item">
               <span className="cert-item-label">Programme of Study</span>
               <div className="cert-item-value">{programmeName}</div>
-            </div>
+            </div> */}
 
             <div className="cert-detail-row">
               <div className="cert-detail-item">
                 <span className="cert-item-label">Graduation Year</span>
-                <div className="cert-item-value">Class of 2026</div>
+                <div className="cert-item-value">
+                  {user?.gradYear
+                    ? `Class of ${user.gradYear}`
+                    : "Class of 2026"}
+                </div>
               </div>
               <div className="cert-detail-item">
                 <span className="cert-item-label">Final CGPA</span>
                 <div className="cert-item-value cert-text-highlight">
-                  {currentGPA.toFixed(2)} / 5.0
+                  {(pRecords.length > 0 ? currentGPA : user?.cgpa || 0).toFixed(
+                    2,
+                  )}{" "}
+                  / 5.0
                 </div>
               </div>
             </div>
           </div>
-
           <div className="cert-export-card">
             <h3 className="cert-card-label">EXPORT OPTIONS</h3>
 
-            <div className="cert-export-option cert-export-option--active">
+            <div 
+              className={`cert-export-option ${exportType === 'pdf' ? 'cert-export-option--active' : ''}`}
+              onClick={() => setExportType('pdf')}
+            >
               <div className="cert-export-icon cert-export-icon--pdf">
                 <svg
                   width="20"
@@ -130,14 +181,15 @@ const Certificates: React.FC = () => {
               </div>
               <div className="cert-export-text">
                 <div className="cert-export-title">PDF Document</div>
-                <div className="cert-export-desc">
-                  Standard for digital sharing
-                </div>
+                <div className="cert-export-desc">Standard for digital sharing</div>
               </div>
-              <div className="cert-radio cert-radio--checked" />
+              <div className={`cert-radio ${exportType === 'pdf' ? 'cert-radio--checked' : ''}`} />
             </div>
 
-            <div className="cert-export-option">
+            <div 
+              className={`cert-export-option ${exportType === 'img' ? 'cert-export-option--active' : ''}`}
+              onClick={() => setExportType('img')}
+            >
               <div className="cert-export-icon cert-export-icon--img">
                 <svg
                   width="20"
@@ -156,10 +208,14 @@ const Certificates: React.FC = () => {
                 <div className="cert-export-title">High-Res Image</div>
                 <div className="cert-export-desc">PNG format @ 300 DPI</div>
               </div>
-              <div className="cert-radio" />
+              <div className={`cert-radio ${exportType === 'img' ? 'cert-radio--checked' : ''}`} />
             </div>
 
-            <button className="cert-download-btn">
+            <button 
+              className="cert-download-btn" 
+              onClick={handleExport}
+              disabled={pRecords.length === 0}
+            >
               <svg
                 width="16"
                 height="16"
@@ -180,7 +236,7 @@ const Certificates: React.FC = () => {
         {/* Right Column: Preview */}
         <div className="cert-preview-col">
           <div className="cert-preview-card">
-            <div className="cert-visual">
+            <div className="cert-visual" ref={certificateRef}>
               {/* Mock Certificate Content */}
               <div className="cert-visual-inner">
                 <div className="cert-visual-header">
@@ -196,8 +252,13 @@ const Certificates: React.FC = () => {
                 </div>
                 <div className="cert-visual-degree">{programmeName}</div>
                 <div className="cert-visual-meta">
-                  {classification} • CGPA {currentGPA.toFixed(2)} / 5.0
+                  {classification} • CGPA{" "}
+                  {(pRecords.length > 0 ? currentGPA : user?.cgpa || 0).toFixed(
+                    2,
+                  )}{" "}
+                  / 5.0
                 </div>
+
                 <div className="cert-visual-bottom-img">
                   <div className="cert-qr-placeholder" />
                 </div>

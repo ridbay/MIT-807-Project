@@ -15,15 +15,34 @@ const documents: UserDocument[] = [
   { id: 3, name: 'Tuition Receipt 2023', meta: 'ARCHIVED • JPG (2.4 MB)', icon: 'bill' },
 ];
 
+import { 
+  calculateGPA, 
+  getUGClassification, 
+  getPGStatus 
+} from '../lib/gpa-engine';
+import { PROGRAMME_RULES } from '../data/rules';
+
 const Profile: React.FC = () => {
-  const { studentType, user } = useAppContext();
+  const { studentType, user, courseRecords } = useAppContext();
   const [tfaEnabled, setTfaEnabled] = useState<boolean>(true);
 
-  const studentName = user?.name || (studentType === 'ug' ? "Alexander J. Sterling" : "Dr. Sarah Rodriguez");
-  const studentMatric = user?.matric || (studentType === 'ug' ? "MAT/ENG/20/4492" : "MAT/PG/23/0012");
-  const studentLevel = studentType === 'ug' ? "400L" : "Masters (MIT)";
-  const studentProgramme = studentType === 'ug' ? "B.Eng Computer Engineering" : "MSc Computer Science";
+  // Filter records by active programme to get accurate metrics
+  const activeProgramme = user?.programme || (studentType === 'pg' ? 'MIT' : 'UG-CS');
+  const rules = PROGRAMME_RULES[activeProgramme];
+  const programmeRecords = courseRecords.filter(r => r.programmeId === activeProgramme);
+  
+  const currentGPA = calculateGPA(programmeRecords);
+  const standing = studentType === 'ug' 
+    ? getUGClassification(currentGPA)
+    : getPGStatus(currentGPA, rules);
+
+  const studentName = user?.name || (studentType === 'ug' ? "Oluwasegun Adeniyi" : "Dr. Chioma Okeke");
+  const studentMatric = user?.matric || (studentType === 'ug' ? "249074212" : "249074311");
+  const studentLevel = user?.level || (studentType === 'ug' ? "400L" : "Masters (MIT)");
+  const studentProgramme = user?.programmeName || (studentType === 'ug' ? "B.Sc. Computer Science" : "M.Sc. Information Technology");
   const studentTypeLabel = studentType === 'ug' ? "UNDERGRADUATE" : "POSTGRADUATE";
+  const studentEmail = user?.email || "student@scholarnode.edu.ng";
+  const studentDept = user?.department || "Computer Science";
 
   return (
     <div className="prof-page">
@@ -93,19 +112,19 @@ const Profile: React.FC = () => {
               </div>
               <div className="prof-info-box">
                 <label>EMAIL ADDRESS</label>
-                <div className="prof-info-val">a.sterling@university.edu</div>
+                <div className="prof-info-val">{studentEmail}</div>
               </div>
               <div className="prof-info-box">
                 <label>PHONE NUMBER</label>
-                <div className="prof-info-val">+1 (555) 234-8901</div>
+                <div className="prof-info-val">+234 812 345 6789</div>
               </div>
               <div className="prof-info-box">
                 <label>DATE OF BIRTH</label>
-                <div className="prof-info-val">March 14, 1999</div>
+                <div className="prof-info-val">May 24, 2002</div>
               </div>
               <div className="prof-info-box full-width">
                 <label>RESIDENTIAL ADDRESS</label>
-                <div className="prof-info-val">42 Academic Way, North Housing, University District</div>
+                <div className="prof-info-val">12 University Road, Akoka, Lagos State, Nigeria</div>
               </div>
             </div>
           </section>
@@ -162,16 +181,16 @@ const Profile: React.FC = () => {
             </div>
             
             <div className="prof-acad-grid">
-              <div className="prof-acad-item">
-                <label>FACULTY</label>
-                <div className="prof-acad-val">Engineering</div>
+               <div className="prof-acad-item">
+                <label>DEPARTMENT</label>
+                <div className="prof-acad-val">{studentDept}</div>
               </div>
               <div className="prof-acad-item right">
                 <label>LEVEL</label>
                 <div className="prof-acad-val">{studentLevel}</div>
               </div>
-              <div className="prof-acad-item full">
-                <label>DEPARTMENT</label>
+               <div className="prof-acad-item full">
+                <label>PROGRAMME</label>
                 <div className="prof-acad-val">{studentProgramme}</div>
               </div>
             </div>
@@ -179,10 +198,10 @@ const Profile: React.FC = () => {
             <div className="prof-standing-card">
               <div className="prof-standing-left">
                 <label>CURRENT STANDING</label>
-                <div className="prof-standing-status">First Class</div>
+                <div className="prof-standing-status">{standing}</div>
               </div>
               <div className="prof-standing-ring">
-                 {studentType === 'pg' ? '4.88' : '3.82'}
+                 {currentGPA.toFixed(2)}
               </div>
             </div>
           </section>

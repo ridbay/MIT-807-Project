@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useAppContext } from '../hooks/useAppContext';
+import { exportCertificatePDF } from '../lib/pdf-export';
+import { calculateGPA, getUGClassification, getPGStatus } from '../lib/gpa-engine';
+import { PROGRAMME_RULES } from '../data/rules';
 import './Verification.css';
 
 interface VerificationResult {
@@ -11,9 +15,23 @@ interface VerificationResult {
 }
 
 const Verification: React.FC = () => {
+  const { verifiedCertificates, user, studentType, courseRecords } = useAppContext();
   const [verifyId, setVerifyId] = useState<string>('');
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const programmeId = user?.programme || "UG-CS";
+  const pRecords = useMemo(() => courseRecords.filter(r => r.programmeId === programmeId), [courseRecords, programmeId]);
+  const currentGPA = useMemo(() => calculateGPA(pRecords), [pRecords]);
+  const standing = useMemo(() => {
+    const rules = PROGRAMME_RULES[programmeId];
+    return studentType === "ug" ? getUGClassification(currentGPA) : getPGStatus(currentGPA, rules);
+  }, [currentGPA, programmeId, studentType]);
+
+  const handleDownload = () => {
+    if (!result || result.status !== 'AUTHENTICATED') return;
+    exportCertificatePDF(user, standing, currentGPA, verifyId, pRecords);
+  };
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,14 +43,27 @@ const Verification: React.FC = () => {
     // Simulate verification delay
     setTimeout(() => {
       setLoading(false);
-      if (verifyId.toUpperCase().startsWith('VER-')) {
+      
+      // Check against memory (context) or legacy VER- format
+      const isVerified = verifiedCertificates.includes(verifyId.trim());
+      
+      if (isVerified) {
+        setResult({
+          status: 'AUTHENTICATED',
+          owner: user?.name || 'Authorized Graduate',
+          docType: 'Degree Certificate',
+          dateIssued: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          hash: `0x${Math.random().toString(16).slice(2, 10)}...${Math.random().toString(16).slice(2, 6)}`,
+          institution: 'scholarNode Academy',
+        });
+      } else if (verifyId.toUpperCase().startsWith('VER-')) {
         setResult({
           status: 'AUTHENTICATED',
           owner: 'Alexander J. Sterling',
           docType: 'Official Transcript',
           dateIssued: 'Oct 24, 2023',
           hash: '0x7e2...9a12',
-          institution: 'University of Engineering',
+          institution: 'scholarNode University',
         });
       } else {
         setResult({ status: 'INVALID' });
@@ -117,7 +148,7 @@ const Verification: React.FC = () => {
                          <div className="ver-detail-val">{result.institution}</div>
                       </div>
                    </div>
-                   <button className="ver-download-btn">Download Verified Copy (PDF)</button>
+                    <button className="ver-download-btn" onClick={handleDownload}>Download Verified Copy (PDF)</button>
                 </div>
               ) : (
                 <div className="ver-result-body">

@@ -26,6 +26,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   });
+  const [verifiedCertificates, setVerifiedCertificates] = useState<string[]>(() => {
+    const saved = localStorage.getItem('mit817_verified_certs_v1');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Persist user to localStorage
   useEffect(() => {
@@ -81,6 +85,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStudentType,
     courseRecords,
     setCourseRecords,
+    verifiedCertificates,
+    setVerifiedCertificates,
   };
 
 

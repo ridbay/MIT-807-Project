@@ -1,0 +1,5 @@
+/* App styles are handled in index.css for global design tokens */
+.app-container {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}

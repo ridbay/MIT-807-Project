@@ -1,0 +1,349 @@
+.cert-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.cert-nav-crumbs {
+  font-size: 0.8rem;
+  color: #6b7ea0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cert-nav-crumbs span { color: #b0bcd4; }
+
+.cert-header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.cert-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a2e54;
+  margin: 0 0 0.5rem;
+}
+
+.cert-desc {
+  font-size: 0.95rem;
+  color: #6b7ea0;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.cert-header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cert-btn-secondary {
+  background: #f0f4f8;
+  color: #1a2e54;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cert-btn-primary {
+  background: #1a2e54;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(26, 46, 84, 0.2);
+}
+
+/* Main Grid */
+.cert-main-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+}
+
+.cert-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card General */
+.cert-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #9baec8;
+  margin-bottom: 1.5rem;
+}
+
+.cert-details-card,
+.cert-export-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid #e8edf4;
+  box-shadow: 0 4px 20px rgba(26, 46, 84, 0.04);
+}
+
+.cert-detail-item {
+  margin-bottom: 1.5rem;
+}
+
+.cert-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.cert-item-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7ea0;
+}
+
+.cert-verified-badge {
+  background: #e6faf8;
+  color: #0d9488;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+}
+
+.cert-item-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a2e54;
+}
+
+.cert-detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.cert-text-highlight {
+  color: #3b6fd4;
+}
+
+/* Export Card */
+.cert-export-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1.5px solid #f0f4f8;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cert-export-option--active {
+  background: #fff;
+  border-color: #1a2e54;
+  box-shadow: 0 4px 12px rgba(26, 46, 84, 0.06);
+}
+
+.cert-export-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cert-export-icon--pdf { background: #fff0f0; color: #dc2626; }
+.cert-export-icon--img { background: #edf2fb; color: #3b6fd4; }
+
+.cert-export-text { flex: 1; }
+.cert-export-title { font-weight: 700; font-size: 0.9rem; color: #1a2e54; }
+.cert-export-desc { font-size: 0.75rem; color: #8499b8; margin-top: 2px; }
+
+.cert-radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d0dbe9;
+  border-radius: 50%;
+  padding: 3px;
+}
+.cert-radio--checked::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #1a2e54;
+  border-radius: 50%;
+}
+
+.cert-download-btn {
+  width: 100%;
+  background: #1a2e54;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 1rem;
+}
+
+/* Preview Col */
+.cert-preview-card {
+  background: #8499b820;
+  border-radius: 24px;
+  padding: 2.5rem;
+  border: 1px dashed #c5d0de;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-visual {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1.414 / 1;
+  background: white;
+  padding: 3rem;
+  box-shadow: 0 20px 50px rgba(26, 46, 84, 0.15);
+  border: 12px double #f0f4f8;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-visual-inner {
+  text-align: center;
+  width: 100%;
+}
+
+.cert-visual-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #8499b8;
+  margin-bottom: 2rem;
+}
+
+.cert-visual-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a2e54;
+  margin-bottom: 1.5rem;
+}
+
+.cert-visual-sub {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #6b7ea0;
+  margin-bottom: 1.5rem;
+}
+
+.cert-visual-degree {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a2e54;
+  margin-bottom: 1rem;
+}
+
+.cert-visual-meta {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3b6fd4;
+}
+
+.cert-visual-bottom-img {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cert-qr-placeholder {
+  width: 60px;
+  height: 60px;
+  background: #f0f4f8;
+  border-radius: 8px;
+}
+
+/* Footer Grid */
+.cert-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.cert-footer-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  border: 1px solid #e8edf4;
+}
+
+.cert-footer-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cert-footer-icon--blue { background: #edf2fb; color: #3b6fd4; }
+.cert-footer-icon--teal { background: #e6faf8; color: #0d9488; }
+.cert-footer-icon--purple { background: #f5f3ff; color: #7c3aed; }
+
+.cert-footer-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a2e54;
+  margin: 0 0 0.4rem;
+}
+
+.cert-footer-text {
+  font-size: 0.85rem;
+  color: #6b7ea0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .cert-main-grid { grid-template-columns: 1fr; }
+  .cert-footer-grid { grid-template-columns: 1fr; }
+}

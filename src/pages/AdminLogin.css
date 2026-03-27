@@ -1,0 +1,230 @@
+.al-root {
+  min-height: 100vh;
+  background: #f8fafc;
+  background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+  background-size: 32px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #1a2e54;
+}
+
+.al-container {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header */
+.al-header {
+  text-align: center;
+}
+
+.al-logo {
+  color: #1a2e54;
+  margin-bottom: 1rem;
+}
+
+.al-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.al-subtitle {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  color: #8499b8;
+  margin-top: 0.4rem;
+}
+
+/* Card */
+.al-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 50px rgba(26, 46, 84, 0.08);
+  border: 1px solid #e8edf4;
+  position: relative;
+}
+
+.al-lock-icon {
+  width: 54px;
+  height: 54px;
+  background: #1a2e54;
+  color: #eab308;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 8px 20px rgba(26, 46, 84, 0.2);
+}
+
+.al-card-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 0 0.75rem;
+}
+
+.al-card-subheading {
+  font-size: 0.875rem;
+  color: #6b7ea0;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.al-field {
+  margin-bottom: 1.5rem;
+}
+
+.al-field label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #1a2e54;
+  margin-bottom: 0.6rem;
+}
+
+.al-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.al-label-row label { margin-bottom: 0; }
+
+.al-forgot {
+  background: none;
+  border: none;
+  color: #3b6fd4;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.al-input-group {
+  position: relative;
+}
+
+.al-input-group input {
+  width: 100%;
+  background: #f8fafc;
+  border: 1.5px solid #e8edf4;
+  padding: 0.9rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #1a2e54;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.al-input-group input:focus {
+  background: #fff;
+  border-color: #1a2e54;
+  box-shadow: 0 0 0 4px rgba(26, 46, 84, 0.05);
+}
+
+.al-toggle-btn {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8499b8;
+  cursor: pointer;
+}
+
+.al-submit-btn {
+  width: 100%;
+  background: #1a2e54;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  transition: all 0.2s;
+}
+
+.al-submit-btn:hover { background: #132442; }
+.al-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.al-extra-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.al-back-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6b7ea0;
+  text-decoration: none;
+}
+.al-back-link:hover { color: #1a2e54; }
+
+/* Security Section */
+.al-badge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.al-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #8499b8;
+}
+
+.al-badge-icon {
+  width: 22px;
+  height: 22px;
+  background: #edf2fb;
+  color: #1a2e54;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.al-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #9baec8;
+}
+
+.al-footer-link {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.al-footer-link:hover { color: #1a2e54; }

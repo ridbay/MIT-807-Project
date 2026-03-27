@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from "../hooks/useAppContext";
 import './AdminLogin.css';
 
 const AdminLogin: React.FC = () => {
-  const [staffId, setStaffId] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [staffId, setStaffId] = useState<string>(localStorage.getItem('admin_staff_id') || '');
+  const [password, setPassword] = useState<string>(localStorage.getItem('admin_password') || '');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { setUser } = useAppContext();
+
+  useEffect(() => {
+    localStorage.setItem('admin_staff_id', staffId);
+    localStorage.setItem('admin_password', password);
+  }, [staffId, password]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,12 +23,17 @@ const AdminLogin: React.FC = () => {
     setTimeout(() => {
       setIsLoading(false);
       setUser({
-        name: 'Admin Dean',
+        name: 'Dr. Funmi Babatunde',
         role: 'admin',
-        id: staffId || 'DIR-001'
+        id: staffId || 'REG-NG-001'
       });
       navigate('/dashboard/admin');
     }, 1000);
+  };
+
+  const fillDemo = () => {
+    setStaffId('REG-NG-001');
+    setPassword('scholarNode2026!');
   };
 
   return (
@@ -53,6 +63,12 @@ const AdminLogin: React.FC = () => {
             Authenticate using your registrar credentials to manage student records and transcript authorizations.
           </p>
 
+          <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+             <button type="button" onClick={fillDemo} className="al-demo-btn">
+                ⚡ Quick Demo Access (Registrar)
+             </button>
+          </div>
+
           <form className="al-form" onSubmit={handleLogin}>
             <div className="al-field">
               <label htmlFor="staff-id">STAFF IDENTIFICATION (ID)</label>
@@ -60,7 +76,7 @@ const AdminLogin: React.FC = () => {
                 <input
                   id="staff-id"
                   type="text"
-                  placeholder="e.g. DIR-001"
+                  placeholder="e.g. REG-NG-001"
                   value={staffId}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStaffId(e.target.value)}
                   required

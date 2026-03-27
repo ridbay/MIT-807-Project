@@ -214,6 +214,13 @@
   border-bottom: 1px solid #f8fafc;
 }
 
+.res-td-empty {
+  padding: 3rem !important;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+}
+
 .res-td-code { font-weight: 700; color: #1a2e54; }
 .res-td-title { font-weight: 600; color: #1a2e54; }
 .res-td-points { font-weight: 700; color: #1a2e54; text-align: right; }

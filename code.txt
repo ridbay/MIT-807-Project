@@ -1,0 +1,602 @@
+You are a senior full-stack engineer helping me upgrade an existing UNILAG Computer Science CGPA Calculator website.
+
+Your task is to add a complete rules-driven GPA/CGPA engine and UI flow for both Undergraduate (UG) and Postgraduate (PG) students of the Faculty/Department of Computer Science, University of Lagos.
+
+Do not build a generic CGPA calculator. Build a UNILAG Computer Science-specific academic calculator with programme-aware rules, curriculum-aware course handling, and result/status interpretation.
+
+1. Project Goal
+
+Upgrade my existing website so that it supports:
+
+UG CGPA calculation
+PG CGPA calculation
+programme-specific rules
+course-based validation
+graduation status checks
+academic standing logic
+course filtering rules
+repeat/carryover/outstanding course handling
+a clean and scalable architecture for future additions
+
+The calculator must support:
+
+UG Computer Science
+PGD Computer Science
+M.Sc Computer Science
+Master of Information Technology (MIT)
+M.Phil / Ph.D course-work structure
+Ph.D 900-level coursework validation
+2. High-Level Product Requirements
+
+Add the following user journey:
+
+Entry flow
+user logs in as Undergraduate or Postgraduate
+User lands on dashboard
+
+If Undergraduate
+User selects:
+Entry type if needed
+Level: 100 / 200 / 300 / 400 / 500
+Semester or session structure depending on current site design
+App loads curriculum courses for that level
+User enters grades or scores for registered courses
+App computes:
+semester GPA
+cumulative CGPA
+class of degree
+academic standing
+graduation progress
+If Postgraduate
+User selects programme:
+PGC / PGD
+MSc
+MIT
+M.Phil
+Ph.D
+App loads programme-specific course structure and rules
+User enters grades or scores
+App computes:
+GPA
+CGPA
+pass/distinction/repeat/refer/withdraw interpretation
+failed unit thresholds
+compulsory course completion
+minimum and maximum unit validation
+3. Core Calculation Engine
+
+Implement a shared calculation engine.
+
+Formula
+
+For each course:
+
+weighted_point = course_unit × grade_point
+
+Then:
+
+GPA = sum(weighted_points for semester) / sum(units counted in semester)
+
+CGPA = sum(all cumulative weighted_points) / sum(all cumulative counted units)
+
+Support both:
+
+direct grade entry
+mark-to-grade conversion
+Grade mapping
+
+Use this mapping:
+
+70 and above = A = 5.0
+60–69 = B = 4.0
+50–59 = C = 3.0
+45–49 = D = 2.0
+40–44 = E = 1.0
+Below 40 = F = 0.0
+
+Add utility functions for:
+
+markToGrade(mark)
+gradeToPoint(grade)
+calculateWeightedPoint(unit, point)
+calculateGPA(courses)
+calculateCGPA(allCourses)
+
+Round displayed GPA/CGPA to 2 decimal places, but keep internal precision safe.
+
+4. Undergraduate Rules to Implement
+
+Build UG as a curriculum-aware rules engine, not just a calculator.
+
+4.1 UG course categories
+
+Each UG course must have:
+
+code
+old code if available
+title
+unit
+level
+status
+prerequisite if applicable
+counts_in_cgpa boolean
+counts_in_classification boolean
+
+Statuses include:
+
+C = Compulsory
+E = Elective
+FR = Faculty Required
+UR = University Required
+4.2 UG CGPA counting logic
+
+Count toward GPA/CGPA:
+
+compulsory courses
+elective courses
+
+Do not count toward degree classification / CGPA where applicable:
+
+GST / university required courses
+pass/fail-style courses
+any course explicitly excluded by regulation
+
+Design this as configurable metadata, not hardcoded scattered conditions.
+
+4.3 UG classification rules
+
+Use:
+
+4.50–5.00 = First Class
+3.50–4.49 = Second Class Upper
+2.40–3.49 = Second Class Lower
+1.50–2.39 = Third Class
+1.00–1.49 = Pass
+4.4 UG academic standing rules
+
+Implement standing logic based on semester GPA / cumulative GPA:
+
+Good Standing if GPA and CGPA are not below 1.0 where applicable
+Warning if semester GPA is below 1.0
+Probation if semester GPA remains below 1.0 across repeated semesters according to regulation logic
+Withdrawal when required by the regulation sequence
+
+Design this in a reusable way:
+
+status history should be derivable from prior semesters
+do not hardcode only the latest semester
+4.5 UG carryover / repeat logic
+
+Support repeated courses.
+
+When a student repeats a course:
+
+preserve attempt history
+allow latest attempt to replace earlier failed attempt in active result interpretation if your site already models that
+prevent duplicate course counting errors
+surface repeated course state in the UI
+
+Make this configurable because some views may need:
+
+all attempts shown
+only latest attempt counted
+transcript view vs calculator view
+4.6 UG graduation checks
+
+Add graduation validation using minimum required units:
+
+5-year programme = 160 minimum units
+4-year programme = 128 minimum units
+3-year programme = 96 minimum units
+
+Also reflect required categories:
+
+university requirements
+faculty requirements
+departmental compulsory courses
+approved electives only
+
+If possible, include a progress panel:
+
+completed units
+counted units
+remaining units
+missing compulsory courses
+missing university/faculty requirements
+5. UG Curriculum Data to Load
+
+Create a structured course bank from the uploaded curriculum.
+
+Include all UG levels already provided:
+
+100 level
+200 level
+300 level
+400 level
+500 level
+
+The data model should support:
+
+new course code
+old course code
+title
+units
+lecture/tutorial/lab hours if needed
+prerequisite
+status
+level
+
+Also include summary rules such as:
+
+compulsory unit totals
+elective unit totals
+programme/faculty/university unit groupings
+
+Do not bury this in the UI. Store it in structured JSON / TS objects / DB seed format.
+
+6. Postgraduate Rules to Implement
+
+PG must be programme-aware. Do not treat all PG students the same.
+
+6.1 PG programme categories
+
+Support:
+
+PGC
+PGD
+MSc
+MIT
+M.Phil
+Ph.D
+6.2 PG level bands
+
+Map course levels as:
+
+700–799 = PGC / PGD
+800–899 = Masters by course-work
+900–999 = M.Phil / Ph.D
+
+Use this for validation and filtering.
+
+6.3 PG course pass thresholds
+
+Implement different minimum pass rules:
+
+For:
+
+PGC
+PGD
+MSc
+MIT
+Masters by course-work
+
+Minimum pass per course:
+
+40%
+grade E
+point 1.0
+
+For:
+
+M.Phil
+Ph.D
+
+Minimum pass per course:
+
+45%
+grade D
+point 2.0
+
+This must be programme-configurable, not hardcoded globally.
+
+6.4 PG classification/status rules
+
+For PGD / MSc / MIT / Masters:
+
+CGPA ≥ 4.50 = Distinction
+CGPA ≥ 2.40 and < 4.50 = Pass
+CGPA < relevant threshold = Repeat / Fail / Withdraw based on programme rules
+
+Withdraw rule:
+
+CGPA below 1.50 should trigger Withdraw where applicable
+6.5 PG failed-unit thresholds
+
+Implement outstanding / failed unit checks:
+
+For academic masters:
+
+failing more than 6 units means failed as a whole
+up to 6 failed units may allow repeat/refer depending on the programme rules
+
+For professional masters:
+
+failing more than 9 units means failed as a whole
+up to 9 failed units may allow repeat/refer
+
+Support programme-specific overrides:
+
+PGD may use its own outstanding-unit logic
+MIT should be treated as professional if configured that way
+6.6 PG unit requirement validation
+
+Support min/max units by programme:
+
+PGC: min 6, max 12
+PGD: min 16, max 24
+Academic masters: min 24, max 30
+Professional masters: min 36, max 54
+M.Phil with masters route: min 6, max 12
+M.Phil with bachelors route: min 30, max 42
+Ph.D with masters route: min 12, max 24
+Ph.D with M.Phil route: min 6, max 12
+
+Also support programme-specific departmental requirements already provided:
+
+PGD Computer Science must include required core courses such as CSC700 and CSC799
+MSc Computer Science must include CSC899 and meet at least 27 units
+MIT must pass all compulsory courses and minimum 54 units
+Ph.D course-work must include the provided 900-level compulsory courses
+6.7 PG project rules
+
+Project courses must be supported as weighted courses with units.
+Examples:
+
+CSC799
+CSC899
+MIT899
+other project/seminar courses
+
+Ensure projects count into GPA/CGPA where the regulation requires.
+
+7. PG Course Banks to Include
+7.1 PGD course structure
+
+Include:
+
+CSC700 Problem Solving and Programming Languages — Compulsory — 4
+CSC701 Computer Architecture — Elective — 4
+CSC702 Operations Research and Systems Analysis — Elective — 4
+CSC703 Statistical Process — Elective — 4
+CSC704 Numerical Analysis — Elective — 4
+CSC705 Software Systems — Elective — 4
+CSC706 Data Structures and File Processing — Elective — 4
+CSC799 Postgraduate Diploma Project — Compulsory — 4
+7.2 MIT course structure
+
+Include the uploaded MIT course bank and units exactly, with compulsory/elective status.
+
+7.3 MSc Computer Science course structure
+
+Include the uploaded MSc course bank and units exactly, with compulsory/elective status, including:
+
+CSC801
+CSC812
+CSC899
+and the listed electives.
+7.4 Ph.D course-work structure
+
+Include:
+
+CSC900 Seminar in Computer Science — Compulsory — 3
+CSC910 Special Topics in Computing System — Compulsory — 3
+CSC920 Special Topics in Operations Research — Compulsory — 3
+CSC930 Special Topics in Numeric and Symbolic Computations — Compulsory — 3
+
+Make the data extensible so more courses can be added later.
+
+8. Required Data Model
+
+Refactor or extend the existing data model so each course can store something like:
+
+type Course = {
+  id: string
+  code: string
+  oldCode?: string
+  title: string
+  units: number
+  level: number
+  semester?: string
+  programmeCategory: 'UG' | 'PG'
+  programme?: 'UG-CS' | 'PGC' | 'PGD' | 'MSC' | 'MIT' | 'MPHIL' | 'PHD'
+  status: 'C' | 'E' | 'FR' | 'UR' | 'Compulsory' | 'Elective'
+  prerequisite?: string[]
+  countsInCgpa: boolean
+  countsInClassification: boolean
+  minimumPassPoint?: number
+  minimumPassMark?: number
+  isProject?: boolean
+  isRepeatable?: boolean
+}
+
+Student course record should support:
+
+type StudentCourseRecord = {
+  courseCode: string
+  units: number
+  mark?: number
+  grade: 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+  gradePoint: number
+  weightedPoint: number
+  counted: boolean
+  passed: boolean
+  semesterId: string
+  attemptNumber?: number
+  repeatedFrom?: string
+}
+
+Programme rules should be centralized:
+
+type ProgrammeRule = {
+  programme: string
+  category: 'UG' | 'PG'
+  minUnits?: number
+  maxUnits?: number
+  minimumCoursePassPoint: number
+  passCgpa?: number
+  distinctionCgpa?: number
+  withdrawCgpa?: number
+  failedUnitLimit?: number
+  classificationMode?: 'UG_CLASS' | 'PG_STATUS'
+}
+9. Architecture Requirements
+
+Refactor the site into clear layers if not already structured this way:
+
+Data layer
+course banks
+rule configs
+grade mappings
+programme metadata
+Logic layer
+score-to-grade conversion
+GPA/CGPA engine
+programme validation
+failed-unit computation
+graduation checks
+classification/status resolver
+UI layer
+selectors
+course entry forms
+results summary
+warnings and status chips
+progress panels
+
+Do not mix business rules directly into React components if this is a React project.
+
+10. UI/UX Requirements
+
+Upgrade the existing interface without breaking it.
+
+Add these interface sections:
+Student Type selector
+Programme selector
+Level selector for UG
+Session/Semester selector if applicable
+Auto-loaded course table
+Grade or score entry
+Instant GPA/CGPA result card
+Academic standing / status badge
+Graduation class or PG result badge
+Validation messages
+Missing requirement alerts
+Failed unit summary
+Outstanding courses section
+Completed vs remaining unit progress
+Helpful UX details
+Allow entry by score or grade
+auto-convert score to grade
+disable manual invalid combinations
+clearly label courses that do not count toward CGPA
+highlight compulsory courses not passed
+indicate electives separately
+support editing and recalculation in real time
+11. Validation Rules
+
+Implement validations such as:
+
+no negative scores
+scores cannot exceed 100
+units must be positive
+duplicate course registration should be flagged unless explicitly handled as repeat
+repeated course attempts should not be double-counted incorrectly
+programme-specific min/max unit rules should be checked
+compulsory course completion should be checked
+M.Phil/Ph.D pass threshold should use D and not E
+PG failed unit totals should be computed from courses below programme pass threshold
+12. Result Interpretation Logic
+For UG, display:
+Semester GPA
+CGPA
+Degree class
+Academic standing
+Counted units
+Non-counted units
+Missing compulsory courses
+Graduation progress
+For PG, display:
+GPA
+CGPA
+Result status:
+Distinction
+Pass
+Refer / Outstanding
+Repeat
+Withdraw
+Failed/outstanding units
+Unit requirement progress
+Compulsory courses not passed
+Whether student is still eligible for programme completion
+13. Important Logic Details
+GST / excluded courses
+
+Ensure excluded courses are still visible in records but not counted in CGPA where required.
+
+Carryovers
+
+Store course attempts with enough data to later show transcript history.
+
+Incomplete grades
+
+The regulations mention incomplete grades. Add support for a non-final grade state like INC if possible, and exclude it from completed GPA calculations until resolved.
+
+Audited courses
+
+Support an audited course type that is visible but excluded from GPA.
+
+14. Output I Want From You
+
+Update my existing site and provide:
+
+clean refactored implementation
+reusable rule engine
+seeded curriculum/programme data
+updated UI screens/components
+helper utilities
+result interpretation components
+comments where logic is sensitive
+brief developer notes explaining:
+where programme rules live
+where course banks live
+how CGPA is computed
+how to add future programmes/courses
+
+If possible, also add:
+
+sample mock student data for testing
+test cases for UG and PG calculations
+at least one test each for:
+UG excluded GST handling
+UG classification
+PG failed unit threshold
+M.Phil/Ph.D minimum pass threshold
+repeated course replacement behavior
+15. Implementation Constraints
+Preserve my existing design as much as possible
+Reuse existing components when sensible
+Improve structure, not just visuals
+Prefer maintainable, modular code
+Avoid hardcoding one-off logic in UI files
+Keep the codebase extensible for other UNILAG departments later
+16. Priority Behaviour Summary
+
+The finished system must correctly do these things:
+
+distinguish UG from PG
+distinguish PGD, MSc, MIT, M.Phil, Ph.D
+load the right courses for each track
+calculate GPA/CGPA correctly
+exclude UG non-counting courses where applicable
+apply the correct pass threshold for each PG type
+validate unit requirements
+detect failed/outstanding units
+assign degree class or PG result status
+support repeats/carryovers
+show graduation/standing feedback clearly
+17. Final Instruction
+
+Implement this as a robust production-quality feature upgrade to my current website.
+
+Do not give me a generic explanation only. Make concrete code changes, organize the data and rules properly, and wire the UI so the full academic flow works end-to-end.
+
+If parts of my current codebase are weakly structured, refactor them carefully while preserving behavior.

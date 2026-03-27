@@ -1,4 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
+import { ProgrammeType } from '../data/rules';
+import { CourseAttempt } from '../lib/gpa-engine';
 
 export type StudentType = 'ug' | 'pg';
 
@@ -8,7 +10,8 @@ export interface User {
   email?: string;
   role: 'student' | 'admin';
   matric?: string;
-  programme?: string;
+  programmeName?: string;
+  programme?: ProgrammeType;
   level?: string;
 }
 
@@ -22,6 +25,12 @@ export interface AppContextType {
   setLoading: Dispatch<SetStateAction<boolean>>;
   studentType: StudentType;
   setStudentType: Dispatch<SetStateAction<StudentType>>;
+  courseRecords: CourseAttempt[];
+  setCourseRecords: Dispatch<SetStateAction<CourseAttempt[]>>;
 }
 
+
+
+
 export const AppContext = createContext<AppContextType | undefined>(undefined);
+

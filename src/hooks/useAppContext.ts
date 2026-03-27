@@ -6,5 +6,5 @@ export const useAppContext = (): AppContextType => {
   if (!context) {
     throw new Error('useAppContext must be used within an AppProvider');
   }
-  return context;
+  return context as AppContextType;
 };

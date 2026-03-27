@@ -1,0 +1,92 @@
+.unit-prog-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(26, 46, 84, 0.05);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.unit-prog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.unit-prog-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a2e54;
+  margin: 0;
+}
+
+.unit-prog-badge {
+  background: #f0f4f8;
+  color: #1a2e54;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid #e2e8f0;
+}
+
+.unit-prog-track {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.unit-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a2e54 0%, #3b82f6 100%);
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unit-prog-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.unit-prog-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unit-prog-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a2e54;
+}
+
+.unit-prog-lab {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.unit-prog-sep {
+  width: 1px;
+  height: 24px;
+  background: #e2e8f0;
+}
+
+.unit-prog-footer {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}

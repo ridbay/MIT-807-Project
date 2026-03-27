@@ -1,0 +1,758 @@
+import { ProgrammeType } from './rules';
+
+export interface Course {
+  code: string;
+  title: string;
+  units: number;
+  level: number;
+  status: 'C' | 'E' | 'FR' | 'UR' | 'Compulsory' | 'Elective';
+  programme?: ProgrammeType;
+}
+
+export const UG_COURSES: Course[] = [
+  {
+    "code": "CSC120",
+    "title": "Computer as a Problem Solving Tool",
+    "units": 3,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "CSC121",
+    "title": "Software Workshop I",
+    "units": 3,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "CSC122",
+    "title": "Introduction to Discrete Mathematics",
+    "units": 2,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "FSC111",
+    "title": "Introductory Biology",
+    "units": 3,
+    "level": 100,
+    "status": "FR"
+  },
+  {
+    "code": "FSC112",
+    "title": "Introductory Chemistry",
+    "units": 3,
+    "level": 100,
+    "status": "FR"
+  },
+  {
+    "code": "FSC113",
+    "title": "Introductory Computer Science",
+    "units": 3,
+    "level": 100,
+    "status": "FR"
+  },
+  {
+    "code": "FSC114",
+    "title": "Introductory Mathematics",
+    "units": 3,
+    "level": 100,
+    "status": "FR"
+  },
+  {
+    "code": "FSC115",
+    "title": "Introductory Physics I",
+    "units": 3,
+    "level": 100,
+    "status": "FR"
+  },
+  {
+    "code": "MAT121",
+    "title": "Algebra and Coordinate Geometry",
+    "units": 3,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "MAT112",
+    "title": "Calculus",
+    "units": 3,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "PHS122",
+    "title": "Introductory Physics III",
+    "units": 3,
+    "level": 100,
+    "status": "C"
+  },
+  {
+    "code": "GST102",
+    "title": "Introduction to Logic",
+    "units": 2,
+    "level": 100,
+    "status": "UR"
+  },
+  {
+    "code": "GST103",
+    "title": "Nigerian People & Culture",
+    "units": 2,
+    "level": 100,
+    "status": "UR"
+  },
+  {
+    "code": "GST105",
+    "title": "Use of English I",
+    "units": 2,
+    "level": 100,
+    "status": "UR"
+  },
+  {
+    "code": "MAT123",
+    "title": "Mechanics I",
+    "units": 2,
+    "level": 100,
+    "status": "E"
+  },
+  {
+    "code": "PHS121",
+    "title": "Introductory Physics II",
+    "units": 2,
+    "level": 100,
+    "status": "E"
+  },
+  {
+    "code": "PHS123",
+    "title": "Introductory Practical Physics",
+    "units": 2,
+    "level": 100,
+    "status": "E"
+  },
+  {
+    "code": "CSC211",
+    "title": "Software Workshop II",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "CSC212",
+    "title": "Introduction to Computer Programming",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "CSC213",
+    "title": "Foundation of Sequential Programs",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "CSC224",
+    "title": "Introductory to Discrete and Data Structures",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "CSC225",
+    "title": "Introduction to Computational Methods",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "CSC227",
+    "title": "Introduction to Information Processing",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "GST201",
+    "title": "General African Studies",
+    "units": 2,
+    "level": 200,
+    "status": "UR"
+  },
+  {
+    "code": "GST214",
+    "title": "Basic Computer Studies",
+    "units": 3,
+    "level": 200,
+    "status": "UR"
+  },
+  {
+    "code": "MAT211",
+    "title": "Real Analysis I",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "MAT213",
+    "title": "Mathematical Methods I",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "MAT223",
+    "title": "Mathematical Methods II",
+    "units": 3,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "PHS216",
+    "title": "Electronics IA",
+    "units": 2,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "PHS263",
+    "title": "Electronics IB",
+    "units": 2,
+    "level": 200,
+    "status": "C"
+  },
+  {
+    "code": "MAT221",
+    "title": "Real Analysis II",
+    "units": 2,
+    "level": 200,
+    "status": "E"
+  },
+  {
+    "code": "MAT212",
+    "title": "Abstract Algebra I",
+    "units": 3,
+    "level": 200,
+    "status": "E"
+  },
+  {
+    "code": "PHS224",
+    "title": "Modern Physics I",
+    "units": 2,
+    "level": 200,
+    "status": "E"
+  },
+  {
+    "code": "CSC320",
+    "title": "Algorithms and Complexity",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC310",
+    "title": "Concurrent Programming",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC313",
+    "title": "Analysis and Design of Digital System",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC314",
+    "title": "Operating Systems I",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC315",
+    "title": "Machine and Assembly Language",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC326",
+    "title": "Introduction to Compiler Construction",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC327",
+    "title": "Net-Centric Computing",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC328",
+    "title": "Introduction to Theory of Computing",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC311",
+    "title": "Operations Research Techniques",
+    "units": 3,
+    "level": 300,
+    "status": "E"
+  },
+  {
+    "code": "CSC323",
+    "title": "Statistical Processing System",
+    "units": 3,
+    "level": 300,
+    "status": "E"
+  },
+  {
+    "code": "CSC316",
+    "title": "Introduction to System Analysis and Design",
+    "units": 3,
+    "level": 300,
+    "status": "C"
+  },
+  {
+    "code": "CSC322",
+    "title": "A Modern Programming Language",
+    "units": 3,
+    "level": 300,
+    "status": "E"
+  },
+  {
+    "code": "CSC331",
+    "title": "Real-Time Programming",
+    "units": 3,
+    "level": 300,
+    "status": "E"
+  },
+  {
+    "code": "CSC324",
+    "title": "Formal Methods in Software Development",
+    "units": 3,
+    "level": 300,
+    "status": "E"
+  },
+  {
+    "code": "CSC410",
+    "title": "Introduction to Database Design and Management",
+    "units": 3,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "CSC434",
+    "title": "Web Design and Data Security",
+    "units": 3,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "CSC411",
+    "title": "Statistical Computing",
+    "units": 3,
+    "level": 400,
+    "status": "E"
+  },
+  {
+    "code": "CSC412",
+    "title": "Introduction to Numerical Analysis",
+    "units": 3,
+    "level": 400,
+    "status": "E"
+  },
+  {
+    "code": "CSC413",
+    "title": "Discrete Mathematics II",
+    "units": 3,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "CSC416",
+    "title": "Software Project Management",
+    "units": 3,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "CSC419",
+    "title": "Software Design and Architecture",
+    "units": 3,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "SIW400",
+    "title": "Industrial Training",
+    "units": 6,
+    "level": 400,
+    "status": "C"
+  },
+  {
+    "code": "CSC417",
+    "title": "Data Communication",
+    "units": 3,
+    "level": 400,
+    "status": "E"
+  },
+  {
+    "code": "CSC418",
+    "title": "Modeling and Simulation",
+    "units": 3,
+    "level": 400,
+    "status": "E"
+  },
+  {
+    "code": "CSC522",
+    "title": "Principle of Programming Language",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC510",
+    "title": "Operating Systems II",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC511",
+    "title": "Advanced Data Structures",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC523",
+    "title": "Computer Networks",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC528",
+    "title": "Introduction to Artificial Intelligence",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC513",
+    "title": "Compiler Construction",
+    "units": 3,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC529",
+    "title": "Final Year Project",
+    "units": 6,
+    "level": 500,
+    "status": "C"
+  },
+  {
+    "code": "CSC526",
+    "title": "Social and Professional Issues in IT",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC515",
+    "title": "Further Statistical Processing",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC516",
+    "title": "Further Numerical Analysis",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC527",
+    "title": "Introduction to Optimization Techniques",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC512",
+    "title": "System Performance Evaluation",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC525",
+    "title": "Computer Architecture",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC518",
+    "title": "Software Testing, Quality Assurance and Maintenance",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  },
+  {
+    "code": "CSC519",
+    "title": "Introduction to Computer Graphics",
+    "units": 3,
+    "level": 500,
+    "status": "E"
+  }
+];
+
+export const PG_COURSES: Record<string, Course[]> = {
+  "PGD": [
+    {
+      "code": "CSC700",
+      "title": "Problem Solving and Programming Languages",
+      "units": 4,
+      "level": 700,
+      "status": "C"
+    },
+    {
+      "code": "CSC701",
+      "title": "Computer Architecture",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC702",
+      "title": "Operations Research and Systems Analysis",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC703",
+      "title": "Statistical Process",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC704",
+      "title": "Numerical Analysis",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC705",
+      "title": "Software Systems",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC706",
+      "title": "Data Structures and File Processing",
+      "units": 4,
+      "level": 700,
+      "status": "E"
+    },
+    {
+      "code": "CSC799",
+      "title": "Postgraduate Diploma Project",
+      "units": 4,
+      "level": 700,
+      "status": "C"
+    }
+  ],
+  "MSC": [],
+  "MIT": [
+    {
+      "code": "MIT801",
+      "title": "Introduction to Information Technology",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT802",
+      "title": "Introduction to Database Management",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT803",
+      "title": "Programming Languages",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT804",
+      "title": "Object-Oriented Programming",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT805",
+      "title": "Computer Systems and Organization",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT806",
+      "title": "IT and LAW",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT807",
+      "title": "AI and its Business Application",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT808",
+      "title": "Concepts and Application of E-Business",
+      "units": 2,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT809",
+      "title": "Elements of Scientific Computing",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT811",
+      "title": "Analysis and Design of Business Information Systems",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT812",
+      "title": "Computer Networks and Communication Protocol",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT813",
+      "title": "Advanced Database Management Systems",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT814",
+      "title": "Human Computer Interactions",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT815",
+      "title": "Internet Programming and Applications",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT816",
+      "title": "Data Warehousing, Data Mining and Business Intelligence",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT817",
+      "title": "Software Engineering",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT821",
+      "title": "Software Systems",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT822",
+      "title": "Operating Systems",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT823",
+      "title": "Office Automation and Project Management",
+      "units": 3,
+      "level": 800,
+      "status": "E"
+    },
+    {
+      "code": "MIT824",
+      "title": "Seminar on Current Topics in IT",
+      "units": 3,
+      "level": 800,
+      "status": "C"
+    },
+    {
+      "code": "MIT899",
+      "title": "Project",
+      "units": 6,
+      "level": 800,
+      "status": "C"
+    }
+  ],
+  "PHD": [
+    {
+      "code": "CSC900",
+      "title": "Seminar in Computer Science",
+      "units": 3,
+      "level": 900,
+      "status": "C"
+    },
+    {
+      "code": "CSC910",
+      "title": "Special Topics in Computing System",
+      "units": 3,
+      "level": 900,
+      "status": "C"
+    },
+    {
+      "code": "CSC920",
+      "title": "Special Topics in Operations Research",
+      "units": 3,
+      "level": 900,
+      "status": "C"
+    },
+    {
+      "code": "CSC930",
+      "title": "Special Topics in Numeric and Symbolic Computations",
+      "units": 3,
+      "level": 900,
+      "status": "C"
+    }
+  ]
+};

@@ -129,15 +129,68 @@
   font-family: inherit;
 }
 
-.cgpa-table-labels {
-  display: grid;
-  grid-template-columns: 1fr 140px 140px;
-  gap: 1rem;
-  padding: 0 1rem 0.75rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #9baec8;
   letter-spacing: 0.05em;
+}
+
+.cgpa-curriculum-shelf {
+  margin-bottom: 1.5rem;
+  background: #f8fafc;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.cgpa-shelf-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.cgpa-shelf-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cgpa-shelf-btn {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cgpa-shelf-btn:hover {
+  border-color: #1a2e54;
+  color: #1a2e54;
+  background: #f1f5f9;
+}
+
+.cgpa-select-main {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a2e54;
+  outline: none;
+}
+
+.cgpa-empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  border: 2px dashed #e2e8f0;
+  border-radius: 16px;
 }
 
 .cgpa-course-list {
@@ -149,8 +202,70 @@
 
 .cgpa-course-row {
   display: grid;
-  grid-template-columns: 1fr 140px 140px;
-  gap: 1rem;
+  grid-template-columns: 1.5fr 60px 120px 140px 40px;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cgpa-course-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cgpa-course-title-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.cgpa-course-code {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.cgpa-course-units {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.cgpa-input-score {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  outline: none;
+  width: 100%;
+}
+
+.cgpa-grade-display {
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.grade-a { color: #059669; }
+.grade-b { color: #10b981; }
+.grade-c { color: #d97706; }
+.grade-d { color: #f59e0b; }
+.grade-e { color: #ef4444; }
+.grade-f { color: #dc2626; }
+
+.cgpa-row-remove {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .cgpa-input-name {
@@ -325,6 +440,27 @@
   font-weight: 700;
   color: #1a2e54;
   margin: 0 0 1.25rem;
+}
+
+.cgpa-val-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.cgpa-val-label { color: #64748b; }
+.cgpa-val-data { font-weight: 700; color: #1e293b; }
+
+.cgpa-save-btn {
+  background: #1a2e54;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
 }
 
 .cgpa-breakdown-item {

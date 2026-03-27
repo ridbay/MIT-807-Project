@@ -1,252 +1,206 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../hooks/useAppContext';
+import { UG_COURSES, PG_COURSES, Course } from '../data/curriculum';
+import { PROGRAMME_RULES, UG_GRADE_MAPPING, ProgrammeType } from '../data/rules';
+import { calculateGPA, getUGClassification, getPGStatus, scoreToGrade, gradeToPoint, CourseAttempt, getUnitProgress } from '../lib/gpa-engine';
+import UnitProgress from '../components/UnitProgress';
 import './CGPACalculator.css';
 
-interface CalculatorCourse {
-  name: string;
-  unit: string;
-  grade: string;
-}
-
 const CGPACalculator: React.FC = () => {
-  const { studentType } = useAppContext();
-  const [programmeType, setProgrammeType] = useState<string>(studentType === 'pg' ? 'Postgraduate' : 'Undergraduate');
-  const [courses, setCourses] = useState<CalculatorCourse[]>([
-    { name: '', unit: '', grade: '' },
-    { name: '', unit: '', grade: '' },
-    { name: '', unit: '', grade: '' },
-  ]);
+  const { studentType, user } = useAppContext();
+  const [selectedProgramme, setSelectedProgramme] = useState<ProgrammeType>(
+    (user?.programme || (studentType === 'pg' ? 'MIT' : 'UG-CS')) as ProgrammeType
+  );
+  const [selectedLevel, setSelectedLevel] = useState<number>(100);
+  const [activeCourses, setActiveCourses] = useState<CourseAttempt[]>([]);
 
-  const addRow = () => setCourses([...courses, { name: '', unit: '', grade: '' }]);
-  const clearAll = () => setCourses([{ name: '', unit: '', grade: '' }]);
+  // Load curriculum based on selection
+  const curriculum: Course[] = useMemo(() => {
+    if (selectedProgramme === 'UG-CS') {
+      return UG_COURSES.filter(c => c.level === selectedLevel);
+    }
+    return PG_COURSES[selectedProgramme] || [];
+  }, [selectedProgramme, selectedLevel]);
 
-  const handleInputChange = (idx: number, field: keyof CalculatorCourse, value: string) => {
-    const newCourses = [...courses];
-    newCourses[idx][field] = value;
-    setCourses(newCourses);
+  const addCourseFromCurriculum = (course: Course) => {
+    if (activeCourses.find(c => c.courseCode === course.code)) return;
+    setActiveCourses([...activeCourses, {
+      courseCode: course.code,
+      courseTitle: course.title,
+      units: course.units,
+      semesterId: 'current'
+    }]);
   };
+
+  const updateAttempt = (idx: number, field: keyof CourseAttempt, value: any) => {
+    const updated = [...activeCourses];
+    const attempt = { ...updated[idx], [field]: value };
+
+    // Auto-calculate point if grade is selected
+    if (field === 'grade') {
+      const mapping = UG_GRADE_MAPPING; // Default mapping
+      attempt.point = gradeToPoint(value, mapping);
+    }
+
+    updated[idx] = attempt;
+    setActiveCourses(updated);
+  };
+
+  const removeCourse = (idx: number) => {
+    setActiveCourses(activeCourses.filter((_, i) => i !== idx));
+  };
+
+  const currentGPA = calculateGPA(activeCourses);
+  const rules = PROGRAMME_RULES[selectedProgramme];
+  
+  const standing = selectedProgramme === 'UG-CS' 
+    ? getUGClassification(currentGPA)
+    : getPGStatus(currentGPA, rules);
 
   return (
     <div className="cgpa-page">
       <div className="cgpa-main-content">
-        {/* Header */}
         <div className="cgpa-header">
-          <h1 className="cgpa-title">CGPA Calculator</h1>
+          <h1 className="cgpa-title">Academic Rules Engine</h1>
           <p className="cgpa-desc">
-            Project your academic future. Input your course units and estimated grades to calculate your semester GPA and overall cumulative standing.
+            Computer Science Department | {selectedProgramme} Rules Applied
           </p>
         </div>
 
-        {/* Calculator Card */}
         <div className="cgpa-card">
           <div className="cgpa-config-row">
             <div className="cgpa-config-item">
-              <span className="cgpa-config-label">PROGRAMME TYPE:</span>
-              <div className="cgpa-toggle-group">
-                <button
-                  className={`cgpa-toggle-btn ${programmeType === 'Undergraduate' ? 'active' : ''}`}
-                  onClick={() => setProgrammeType('Undergraduate')}
-                >
-                  Undergraduate
-                </button>
-                <button
-                  className={`cgpa-toggle-btn ${programmeType === 'Postgraduate' ? 'active' : ''}`}
-                  onClick={() => setProgrammeType('Postgraduate')}
-                >
-                  Postgraduate
-                </button>
+              <span className="cgpa-config-label">SELECT PROGRAMME:</span>
+              <select 
+                className="cgpa-select-main"
+                value={selectedProgramme}
+                onChange={(e) => {
+                  setSelectedProgramme(e.target.value as ProgrammeType);
+                  setActiveCourses([]);
+                }}
+              >
+                <option value="UG-CS">B.Sc Computer Science</option>
+                <option value="PGD">PGD Computer Science</option>
+                <option value="MSC">M.Sc Computer Science</option>
+                <option value="MIT">Master of Info. Tech (MIT)</option>
+                <option value="PHD">Ph.D Computer Science</option>
+              </select>
+            </div>
+            
+            {selectedProgramme === 'UG-CS' && (
+              <div className="cgpa-config-item">
+                <span className="cgpa-config-label">LEVEL:</span>
+                <div className="cgpa-toggle-group">
+                  {[100, 200, 300, 400, 500].map(lvl => (
+                    <button
+                      key={lvl}
+                      className={`cgpa-toggle-btn ${selectedLevel === lvl ? 'active' : ''}`}
+                      onClick={() => setSelectedLevel(lvl)}
+                    >
+                      {lvl}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="cgpa-config-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
-              <span>Grading scale: 5.0 (UG) / 7.0 or Distinction (PG)</span>
-            </div>
+            )}
           </div>
 
-          <div className="cgpa-section-header">
-            <div className="cgpa-section-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-              </svg>
-              Semester Performance
-            </div>
-            <button className="cgpa-load-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M23 4v6h-6" />
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-              </svg>
-              Load Previous Data
-            </button>
+          <div className="cgpa-curriculum-shelf">
+             <span className="cgpa-shelf-label">AVAILABLE CURRICULUM:</span>
+             <div className="cgpa-shelf-items">
+                {curriculum.map(course => (
+                  <button 
+                    key={course.code} 
+                    className="cgpa-shelf-btn"
+                    onClick={() => addCourseFromCurriculum(course)}
+                  >
+                    {course.code} ({course.units}U)
+                  </button>
+                ))}
+             </div>
           </div>
 
           <div className="cgpa-table-labels">
-            <span>COURSE NAME</span>
-            <span>UNIT LOAD</span>
-            <span>GRADE / SCALE</span>
+            <span>COURSE</span>
+            <span>UNITS</span>
+            <span>SCORE (0-100)</span>
+            <span>GRADE</span>
+            <span>ACTION</span>
           </div>
 
           <div className="cgpa-course-list">
-            {courses.map((course, idx) => (
+            {activeCourses.map((attempt, idx) => (
               <div key={idx} className="cgpa-course-row">
-                <input
-                  type="text"
-                  placeholder="e.g. Advanced Calculus (MTH 201)"
-                  className="cgpa-input-name"
-                  value={course.name}
-                  onChange={(e) => handleInputChange(idx, 'name', e.target.value)}
-                />
-                <select 
-                  className="cgpa-select"
-                  value={course.unit}
-                  onChange={(e) => handleInputChange(idx, 'unit', e.target.value)}
+                <div className="cgpa-course-info">
+                  <span className="cgpa-course-code">{attempt.courseCode}</span>
+                  <span className="cgpa-course-title-sub">{attempt.courseTitle}</span>
+                </div>
+                <span className="cgpa-course-units">{attempt.units}</span>
+                <select
+                  className="cgpa-input-score"
+                  value={attempt.grade || ''}
+                  onChange={(e) => updateAttempt(idx, 'grade', e.target.value)}
                 >
-                  <option value="">Select Unit</option>
-                  <option value="1">1 Unit</option>
-                  <option value="2">2 Units</option>
-                  <option value="3">3 Units</option>
-                  <option value="4">4 Units</option>
+                  <option value="">Grade</option>
+                  {UG_GRADE_MAPPING.map(m => (
+                    <option key={m.grade} value={m.grade}>{m.grade}</option>
+                  ))}
                 </select>
-                <select 
-                  className="cgpa-select"
-                  value={course.grade}
-                  onChange={(e) => handleInputChange(idx, 'grade', e.target.value)}
-                >
-                  <option value="">Select Grade</option>
-                  {programmeType === 'Undergraduate' ? (
-                    <>
-                      <option value="5">A (5.0)</option>
-                      <option value="4">B (4.0)</option>
-                      <option value="3">C (3.0)</option>
-                      <option value="2">D (2.0)</option>
-                      <option value="0">F (0.0)</option>
-                    </>
-                  ) : (
-                    <>
-                      <option value="5">Distinction (A)</option>
-                      <option value="4">Merit (B)</option>
-                      <option value="3">Pass (C)</option>
-                      <option value="0">Fail (F)</option>
-                    </>
-                  )}
-                </select>
+                <span className={`cgpa-grade-display ${attempt.grade ? `grade-${attempt.grade.toLowerCase()}` : ''}`}>
+                  {attempt.grade || '-'} ({attempt.point || '0.0'})
+                </span>
+                <button className="cgpa-row-remove" onClick={() => removeCourse(idx)}>×</button>
               </div>
             ))}
-          </div>
-
-          <div className="cgpa-actions">
-            <button className="cgpa-add-btn" onClick={addRow}>
-              <span>+</span> Add Course Row
-            </button>
-            <button className="cgpa-clear-btn" onClick={clearAll}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-              Clear All
-            </button>
-          </div>
-        </div>
-
-        {/* Info Box */}
-        <div className="cgpa-info-box">
-          <div className="cgpa-info-icon">i</div>
-          <div>
-            <h4>How it's calculated</h4>
-            <p>
-              Our calculator uses the standard 5.0 scale. The Weighted Grade Point (WGP) is calculated by multiplying the unit load by the grade point. Your GPA is the sum of WGP divided by the total units for the semester. <strong>Postgraduate (PG)</strong> calculations may utilize alternative scales (e.g. 7.0 or Pass/Merit/Distinction) based on department guidelines.
-            </p>
+            {activeCourses.length === 0 && (
+              <div className="cgpa-empty-state">
+                Select courses from the curriculum shelf above to begin calculation.
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Side Panel */}
       <aside className="cgpa-side">
         <div className="cgpa-standing-card">
-          <div className="cgpa-standing-label">CUMULATIVE STANDING</div>
+          <div className="cgpa-standing-label">CURRENT GPA</div>
           <div className="cgpa-standing-value">
-            4.82<span className="cgpa-standing-max">/ 5.0</span>
+            {currentGPA.toFixed(2)}<span className="cgpa-standing-max">/ 5.0</span>
           </div>
           <div className="cgpa-standing-badge">
-            {programmeType === 'Undergraduate' ? 'FIRST CLASS HONORS' : 'PASS WITH DISTINCTION'}
-          </div>
-          <div className="cgpa-star-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
+            {standing.toUpperCase()}
           </div>
         </div>
 
+        <UnitProgress 
+          progress={getUnitProgress(activeCourses, rules)} 
+          programmeName={selectedProgramme} 
+        />
+
         <div className="cgpa-breakdown-card">
-          <h3 className="cgpa-breakdown-title">Result Breakdown</h3>
-          
-          <div className="cgpa-breakdown-item">
-            <div className="cgpa-item-left">
-              <span className="cgpa-item-label">SEMESTER GPA</span>
-              <span className="cgpa-item-val-large">4.65</span>
-            </div>
-            <div className="cgpa-item-trend">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>
-            </div>
+          <h3 className="cgpa-breakdown-title">Programme Validation</h3>
+          <div className="cgpa-val-item">
+             <div className="cgpa-val-label">Pass Threshold:</div>
+             <div className="cgpa-val-data">{rules.minPassMark}% (Grade {selectedProgramme.startsWith('PHD') ? 'D' : 'E'})</div>
           </div>
-
-          <div className="cgpa-breakdown-item no-border">
-            <div className="cgpa-item-row">
-              <span className="cgpa-item-label">ACADEMIC LOAD</span>
-              <span className="cgpa-item-val">18 / 22 Units</span>
-            </div>
-            <div className="cgpa-progress-track">
-              <div className="cgpa-progress-fill" style={{ width: '82%' }} />
-            </div>
+          <div className="cgpa-val-item">
+             <div className="cgpa-val-label">Withdraw CGPA:</div>
+             <div className="cgpa-val-data">{rules.withdrawCgpa.toFixed(2)}</div>
           </div>
-
-          <div className="cgpa-breakdown-footer">
-            <div className="cgpa-footer-row">
-              <span className="cgpa-footer-label">Total Quality Points</span>
-              <span className="cgpa-footer-val">84.0</span>
+          {rules.failedUnitLimit && (
+            <div className="cgpa-val-item">
+               <div className="cgpa-val-label">Failed Unit Limit:</div>
+               <div className="cgpa-val-data">{rules.failedUnitLimit} Units</div>
             </div>
-            <div className="cgpa-footer-row">
-              <span className="cgpa-footer-label">Target GPA</span>
-              <span className="cgpa-footer-val">4.90</span>
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="cgpa-side-actions">
-          <button className="cgpa-download-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download Estimate (PDF)
-          </button>
-          <button className="cgpa-share-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-            Share Projection
-          </button>
+           <button className="cgpa-save-btn">
+              Save to Academic Records
+           </button>
         </div>
       </aside>
-
-      {/* Floating Help */}
-      <button className="cgpa-help-fab">?</button>
     </div>
   );
 };

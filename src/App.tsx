@@ -13,6 +13,12 @@ import Verification from "./pages/Verification";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import CGPACalculator from "./pages/CGPACalculator";
+import StudentRegistry from "./pages/admin/StudentRegistry";
+import ResultManager from "./pages/admin/ResultManager";
+import TranscriptApps from "./pages/admin/TranscriptApps";
+import Issuance from "./pages/admin/Issuance";
+import VerificationLogs from "./pages/admin/VerificationLogs";
+import AcademicRules from "./pages/admin/AcademicRules";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -40,6 +46,12 @@ const App: React.FC = () => {
         <Route path="/dashboard/admin" element={<DashboardLayout isAdmin />}>
           <Route index element={<Navigate to="main" replace />} />
           <Route path="main" element={<AdminDashboard />} />
+          <Route path="registry" element={<StudentRegistry />} />
+          <Route path="results" element={<ResultManager />} />
+          <Route path="transcripts" element={<TranscriptApps />} />
+          <Route path="certificates" element={<Issuance />} />
+          <Route path="verification" element={<VerificationLogs />} />
+          <Route path="curriculum" element={<AcademicRules />} />
           <Route path="verify" element={<Verification />} />
         </Route>
 

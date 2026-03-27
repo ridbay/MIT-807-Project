@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './AdminDashboard.css';
 
 interface AdminRequest {
@@ -20,20 +20,26 @@ interface AdminAction {
   icon: 'check' | 'alert' | 'mail';
 }
 
-const adminRequests: AdminRequest[] = [
-  { id: '#STU-88291', name: 'Alex M. Thompson', initial: 'AM', date: 'Oct 12, 2023', dept: 'Computer Science', level: 'UG', status: 'IN REVIEW', statusColor: 'gray', action: 'Approve' },
-  { id: '#STU-92014', name: 'Sarah Rodriguez', initial: 'SR', date: 'Oct 11, 2023', dept: 'Architecture', level: 'PG', status: 'URGENT', statusColor: 'red', action: 'Approve (incl. Thesis)' },
-  { id: '#STU-87720', name: 'James K. Wilson', initial: 'JK', date: 'Oct 10, 2023', dept: 'Economics', level: 'UG', status: 'PENDING', statusColor: 'gray', action: 'Approve' },
-  { id: '#STU-91003', name: 'Elena Lowery', initial: 'EL', date: 'Oct 09, 2023', dept: 'Biotechnology', level: 'PG', status: 'PENDING', statusColor: 'gray', action: 'Approve (incl. Thesis)' },
-];
-
-const adminActions: AdminAction[] = [
-  { id: 1, text: 'Registrar Sarah approved 14 transcripts for the Engineering Faculty.', time: '12 MINUTES AGO', icon: 'check' },
-  { id: 2, text: 'System detected a mismatched ID for #STU-99011. Flagged for review.', time: '1 HOUR AGO', icon: 'alert' },
-  { id: 3, text: 'Admin Dean broadcasted Semester Results to all departments.', time: '3 HOURS AGO', icon: 'mail' },
+const INITIAL_REQUESTS: AdminRequest[] = [
+  { id: '#STU-88291', name: 'Oluwaseun Adeyemi', initial: 'OA', date: 'Mar 27, 2026', dept: 'Computer Science', level: 'UG', status: 'IN REVIEW', statusColor: 'gray', action: 'Approve' },
+  { id: '#STU-92014', name: 'Chidi Okafor', initial: 'CO', date: 'Mar 26, 2026', dept: 'Architecture', level: 'PG', status: 'URGENT', statusColor: 'red', action: 'Approve (incl. Thesis)' },
+  { id: '#STU-87720', name: 'Amaka Nwachukwu', initial: 'AN', date: 'Mar 25, 2026', dept: 'Economics', level: 'UG', status: 'PENDING', statusColor: 'gray', action: 'Approve' },
+  { id: '#STU-91003', name: 'Babatunde Raji', initial: 'BR', date: 'Mar 24, 2026', dept: 'Biotechnology', level: 'PG', status: 'PENDING', statusColor: 'gray', action: 'Approve (incl. Thesis)' },
 ];
 
 const AdminDashboard: React.FC = () => {
+  const [requests, setRequests] = useState(INITIAL_REQUESTS);
+  
+  const handleApprove = (id: string) => {
+    setRequests(requests.filter(r => r.id !== id));
+    // In a real app, this would update a backend
+  };
+
+  const adminActions: AdminAction[] = [
+    { id: 1, text: 'Registrar Funmi approved 14 transcripts for the Engineering Faculty.', time: '12 MINUTES AGO', icon: 'check' },
+    { id: 2, text: 'System detected a mismatched ID for #STU-99011. Flagged for review.', time: '1 HOUR AGO', icon: 'alert' },
+    { id: 3, text: 'Admin Dean broadcasted Semester Results to all departments.', time: '3 HOURS AGO', icon: 'mail' },
+  ];
   return (
     <div className="adm-page">
       {/* Overview Header */}
@@ -146,8 +152,8 @@ const AdminDashboard: React.FC = () => {
                      <th>ACTIONS</th>
                   </tr>
                </thead>
-               <tbody>
-                  {adminRequests.map((req, i) => (
+                <tbody>
+                  {requests.map((req, i) => (
                      <tr key={i}>
                         <td className="adm-td-student">
                            <div className="adm-student-avatar">{req.initial}</div>
@@ -169,14 +175,14 @@ const AdminDashboard: React.FC = () => {
                            </span>
                         </td>
                         <td className="adm-td-actions">
-                           <button className="adm-action-approve">
+                           <button className="adm-action-approve" onClick={() => handleApprove(req.id)}>
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                                  <polyline points="22 4 12 14.01 9 11.01" />
-                              </svg>
-                              {req.action}
+                               </svg>
+                               {req.action}
                            </button>
-                           <button className="adm-action-reject">Reject</button>
+                           <button className="adm-action-reject" onClick={() => handleApprove(req.id)}>Reject</button>
                         </td>
                      </tr>
                   ))}
@@ -184,7 +190,7 @@ const AdminDashboard: React.FC = () => {
             </table>
          </div>
          <div className="adm-pagination">
-            <span>Showing 4 of 184 pending requests</span>
+            <span>Showing {requests.length} of 184 pending Nigerian institutional requests</span>
             <div className="adm-pag-controls">
                <button className="adm-pag-arrow">‹</button>
                <button className="adm-pag-arrow">›</button>
